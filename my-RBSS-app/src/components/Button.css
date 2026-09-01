@@ -1,0 +1,18 @@
+.custom-btn {
+  margin-top: 22px;
+  background: #E3BE5C;
+  color: #ffffff;
+  border: none;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  padding: 14px 0;
+  border-radius: 2px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.custom-btn:hover {
+    background-color: #927d02;
+  }
