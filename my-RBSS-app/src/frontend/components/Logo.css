@@ -1,0 +1,11 @@
+.logo {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--text-primary);
+  padding: 6px 12px;
+  border: 1px solid var(--accent-text);
+  border-radius: 2px;
+  display: inline-block;
+}
+.logo span { color: var(--accent-text); }
