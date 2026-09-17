@@ -1,0 +1,19 @@
+.topnav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 28px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+}
+.nav-left { display: flex; align-items: center; gap: 16px; }
+.hamburger { display: flex; flex-direction: column; gap: 4px; cursor: pointer; }
+.hamburger span { width: 20px; height: 2px; background: var(--text-secondary); }
+.nav-right { display: flex; align-items: center; gap: 18px; }
+.logout {
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}

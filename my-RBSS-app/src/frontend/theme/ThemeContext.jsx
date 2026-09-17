@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useContext } from "react";
 
 const ThemeContext = createContext(null);
 
