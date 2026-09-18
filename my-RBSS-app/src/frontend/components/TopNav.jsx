@@ -7,7 +7,6 @@ export default function TopNav() {
   return (
     <div className="topnav">
       <div className="nav-left">
-        <div className="hamburger"><span /><span /><span /></div>
         <Logo />
       </div>
       <div className="nav-right">
@@ -17,3 +16,5 @@ export default function TopNav() {
     </div>
   );
 }
+
+
