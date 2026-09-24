@@ -1,0 +1,25 @@
+.btn {
+  border: none;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 13.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 14px 22px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.btn-full { width: 100%; }
+
+.btn-solid {
+  background: var(--accent-fill);
+  color: var(--accent-fill-text);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
