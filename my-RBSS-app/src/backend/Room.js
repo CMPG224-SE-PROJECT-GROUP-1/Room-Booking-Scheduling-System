@@ -4,22 +4,31 @@ export class Room{
     #building;      // String
     #capacity;      // int
     #availability;  // boolean
-    #amentities;    // List
+    #amenities;    // List
 
 
-    constructor(roomNumber, building, capacity, availabilty, amenities){
+    constructor(roomID, roomNumber, building, capacity, availability, amenities){
+        this.#roomID = roomID;
         this.#roomNumber = roomNumber;    // String
         this.#building = building;
         this.#capacity = capacity;
-        this.#availability = availabilty;
-        this.#amentities = amenities; 
+        this.#availability = availability;
+        this.#amenities = amenities; 
     }
+
+    // GETTERS
+
+    get getRoomID() {return this.#roomID}
+    get getRoomNumber() {return this.#roomNumber}
+    get getBuilding() {return this.#building}
+    get getCapacity() {return this.#capacity}
+    get getAmenities() {return this.#amenities}
 
     checkAvailable(){
         return this.#availability;
     }
 
     getDetails(){
-        return "";
+        return  `Room ${this.#roomNumber} (${this.#building}) — capacity ${this.#capacity}`;
     }
 }

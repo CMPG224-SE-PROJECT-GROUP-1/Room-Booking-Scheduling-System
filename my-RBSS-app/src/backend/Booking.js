@@ -8,7 +8,8 @@ export class Booking{
     #checkInCode    // String
     #status         // boolean
 
-    constructor(userID, roomID, startTime, endTime, roomUse, checkInCode){
+    constructor(bookingID, userID, roomID, startTime, endTime, roomUse, checkInCode){
+        this.#bookingID = bookingID;
         this.#userID = userID;    // String
         this.#roomID = roomID;
         this.#startTime = startTime;
@@ -16,6 +17,10 @@ export class Booking{
         this.#roomUse = roomUse; 
         this.#checkInCode = checkInCode;
         this.#status = false; 
+    }
+
+    setBookingID(id){
+        this.#bookingID = id;
     }
 
     confirmBooking(){
@@ -26,8 +31,13 @@ export class Booking{
         
     }
 
-    checkInCode(){
+    checkIn(){
 
+    }
+
+    isExpired(){
+        const graceMs = 30 * 60 * 1000; // 30 minutes, from your SRS
+        return !this.#status && Date.now() > this.#startTime.getTime() + graceMs;
     }
 
 }

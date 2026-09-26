@@ -3,6 +3,7 @@ export class BookingManager{
 
     constructor(){
         // gathers all bookings from superbase database into activeBookings list
+        this.#activeBookings = [];
     }
 
     searchRooms(){

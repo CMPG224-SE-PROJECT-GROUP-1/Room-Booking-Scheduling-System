@@ -5,9 +5,7 @@ export class AdminUser extends User{
     
     constructor(fullName, studentNumber, email, password){
         super(fullName, studentNumber, email, password)
-        this.#permissions = {
-            // all admin permissions
-        }
+        this.#permissions = [ "MANAGE_USERS", "BLOCK_ROOM"]
     }
 
     manageUser(userID){
@@ -15,6 +13,6 @@ export class AdminUser extends User{
     }
 
     blockRoom(roomID){
-        
+
     }
 }
