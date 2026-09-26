@@ -9,4 +9,12 @@ export class AdminUser extends User{
             // all admin permissions
         }
     }
+
+    manageUser(userID){
+
+    }
+
+    blockRoom(roomID){
+        
+    }
 }
