@@ -1,3 +1,4 @@
+import { supabase } from '../supabaseClient.js';
 import {User} from './User.js';
 
 export class AdminUser extends User{
@@ -12,11 +13,21 @@ export class AdminUser extends User{
         return this.#permissions.includes(action);
     }
 
-    manageUser(userID){
+    async manageUser(userID){
+        if (!this.hasPermission("MANAGE_USERS")){
+            throw new Error("Not Authorized");
+        }
 
+        const {data, error} = await supabase
+        .from('users').select('*').eq('user_id', userID).single()
+
+        if (error) throw new Error(error.message);
+        return data;
     }
 
-    blockRoom(roomID){
-
+    async blockRoom(roomID){
+        if (!this.hasPermission("BLOCK_ROOM")){
+            throw new Error("Not authorized")
+        }
     }
 }
