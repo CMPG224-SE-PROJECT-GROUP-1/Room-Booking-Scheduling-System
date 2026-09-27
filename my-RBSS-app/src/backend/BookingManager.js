@@ -1,3 +1,4 @@
+import { Booking } from './Booking.js';
 import {supabase} from './src/supabaseClient.js'
 
 export class BookingManager{
@@ -8,8 +9,19 @@ export class BookingManager{
         this.#activeBookings = [];
     }
 
-    searchRooms(){
+    async searchRooms({building, minCapacity} = {}){
         // interfaces with supabase to use search feature;
+        let query = supabase.from('rooms').select('*').eq('availability', true);
+
+        if (building) query = query.eq('building', building);
+        if (minCapacity) query = query.gte('capacity',minCapacity);
+
+        const {data, error} = await query;
+        if (error) throw new Error(error.message);
+
+        return data.map(row => new Room(row.room_id, row.room_number, row.building,
+        row.capacity, row.availability, row.amenities));
+
     }
 
     async createBooking(userID, roomID, slot, roomUse){
@@ -39,15 +51,31 @@ export class BookingManager{
     }
 
     processCheckIn(bookingID, code){
-        // checks if code is the same as the checkInCode in the Booking made
+        const booking = this.#activeBookings.find(b => b.getBookingID === bookingID);
+        if (!booking) return false;
+        return booking.checkIn(code);
     }
 
-    cancelBooking(bookingID, reason){
-        // calls Booking's cancelBooking with reason
+    async cancelBooking(bookingID, reason){
+        const booking = this.#activeBookings.find(b => b.getBookingID === bookingID);
+
+        booking.cancel(reason);
+        const {error} = await supabase.from('bookings')
+        .update({status: false, cancel_reason: reason})
+        .eq('booking_id, bookingID');
+
+        return !error;
     }
 
     autoCancelUnclaimed(){
-        // checks if current time is 30 minutes after slot time and if no checkIn so far the booking is cancelled, checkInCode rendered invalid
+        // let cancelledCount = 0;
+
+        for (const booking of this.#activeBookings){
+            if (booking.isExpired()){
+                booking.cancel("No check-in within 30 minutes")
+                // cancelledCount++;
+            }
+        }
     }
 
 }

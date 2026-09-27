@@ -19,20 +19,30 @@ export class Booking{
         this.#status = false; 
     }
 
+    // GETTERS
+    get getBookingID() {return this.#bookingID;}
+    get getRoomID() {return this.#roomID;}
+    get getUserID() {return this.#userID;}
+    get getStartTime() {return this.#startTime;}
+    get getEndTime() {return this.#endTime;}
+    get getStatus() {return this.#status;}
+
     setBookingID(id){
         this.#bookingID = id;
     }
 
     confirmBooking(){
-        
+        this.#status = true;
+        return this.#status;
     }
 
-    cancel(){
-        
+    cancel(reason){
+        this.#status = false;
+        return true;
     }
 
-    checkIn(){
-
+    checkIn(code){
+        return code === this.#checkInCode;
     }
 
     isExpired(){
