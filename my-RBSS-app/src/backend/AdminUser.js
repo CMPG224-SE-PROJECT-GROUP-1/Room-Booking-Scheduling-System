@@ -8,6 +8,10 @@ export class AdminUser extends User{
         this.#permissions = [ "MANAGE_USERS", "BLOCK_ROOM"]
     }
 
+    hasPermission(action){
+        return this.#permissions.includes(action);
+    }
+
     manageUser(userID){
 
     }

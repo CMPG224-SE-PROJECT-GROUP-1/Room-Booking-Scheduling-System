@@ -37,8 +37,17 @@ export class User{
         }
     }
 
-    authenticate(password){
-        // Interface with Supabase to authenticate
+    async authenticate(password){
+        const [data, error] = await supabase.auth.signInWithPassword({
+            email: this.getEmail,
+            password: password
+        });
+
+        if (error){
+            return false;
+        }
+
+        return true;
     }
 
     updateProfile(){
@@ -46,7 +55,7 @@ export class User{
     }
 
     hasPermission(action){
-
+        return false; // Base user has no extra permissions
     }
 
 }
