@@ -1,12 +1,35 @@
 import { Booking } from './Booking.js';
-import {supabase} from './src/supabaseClient.js'
+import { supabase } from '../supabaseClient.js';
 
 export class BookingManager{
     #activeBookings     // List<Booking>
 
     constructor(){
-        // gathers all bookings from superbase database into activeBookings list
         this.#activeBookings = [];
+        this.ready = this.fetchBookings();
+    }
+
+    get getBookings(){
+        return this.#activeBookings;
+    }
+
+    async fetchBookings(){
+        const {data, error} = await supabase.from('bookings')
+        .select('*')
+        .eq('status',true);
+
+        if (error) throw new Error(`WORKS! ${error.message}`);
+
+        data?.forEach(row => {
+            this.#activeBookings.push(new Booking(
+                row.booking_id,
+                row.user_id,
+                row.room_id,
+                row.start_time,
+                row.end_time,
+                row.check_in_code,
+            ));
+        });
     }
 
     async searchRooms({building, minCapacity} = {}){

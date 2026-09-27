@@ -1,6 +1,6 @@
-import { User } from "./User.js";
-import { AdminUser } from "./AdminUser.js";
+import { BookingManager } from "./BookingManager.js";
 
-const user1 = new User("Neo", "12345", "neomasebe9@gmail.com", "0101010");
+const manager = new BookingManager()
+await manager.ready;
 
-console.log(user1.getFullName)
+console.log(manager.fetchBookings())

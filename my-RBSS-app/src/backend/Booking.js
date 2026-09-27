@@ -46,7 +46,7 @@ export class Booking{
     }
 
     isExpired(){
-        const graceMs = 30 * 60 * 1000; // 30 minutes, from your SRS
+        const graceMs = 30 * 60 * 1000; // 30 minutes grace time
         return !this.#status && Date.now() > this.#startTime.getTime() + graceMs;
     }
 

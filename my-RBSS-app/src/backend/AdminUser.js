@@ -13,7 +13,7 @@ export class AdminUser extends User{
         return this.#permissions.includes(action);
     }
 
-    async manageUser(userID){
+    async manageUser(userID){ 
         if (!this.hasPermission("MANAGE_USERS")){
             throw new Error("Not Authorized");
         }
