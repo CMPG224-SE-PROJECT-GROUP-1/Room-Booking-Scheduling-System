@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Field from "../components/Field";
 import Button from "../components/Button";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 export function LoginPage() {
     const [uniNumber, setUniNumber] = useState('')
@@ -12,7 +13,7 @@ export function LoginPage() {
     }
 
     return (
-        <div className="login-page">
+            <div className="login-page">
             <form className="login-form" onSubmit={handleSubmit}>
                 <h1>Sign In!</h1>
 
@@ -35,9 +36,15 @@ export function LoginPage() {
 
                 <Button>Sign In</Button>
 
+                <div className="links">
+                    <Link to="/forgotpassword">Forgot your password?    </Link>
+                    <Link to="/signup">Create new account</Link>
+                </div>
+
             </form>
             
             
         </div>
+        
     );
 }
