@@ -1,0 +1,52 @@
+.field {
+  margin-bottom: 24px;
+}
+
+.field label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--yellow);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 8px;
+}
+
+.input-wrap {
+  position: relative;
+}
+
+.field input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--yellow-pale);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  padding: 8px 2px 10px;
+  outline: none;
+  position: relative;
+  z-index: 1;
+}
+
+.field input::placeholder { color: #5c543f; }
+
+.underline {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: rgba(227, 190, 92, 0.35);
+}
+
+.underline-fill {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  height: 2px;
+  width: 0%;
+  background: var(--yellow);
+  transform: translateX(-50%);
+  transition: width 0.28s ease;
+}
+
+.field.focused .underline-fill { width: 100%; }
