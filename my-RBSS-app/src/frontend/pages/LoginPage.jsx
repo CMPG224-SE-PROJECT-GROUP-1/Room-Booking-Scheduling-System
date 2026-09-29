@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 
 export function LoginPage() {
   const [uniNumber, setUniNumber] = useState('');
+  const [name, setName] = useState('')
   const [password, setPassword] = useState('');
 
   function handleSubmit(event) {
@@ -22,6 +23,15 @@ export function LoginPage() {
         <section className="login-left">
           <form className="login-form" onSubmit={handleSubmit}>
             <h1>Sign In!</h1>
+
+            <Field
+              id="name"
+              label="Name and Surname"
+              placeholder="e.g Neo Masebe"
+              value = {name}
+              onChange={(e) => setName(e.target.value)}
+
+          />
 
             <Field
               id="univeristy-number"

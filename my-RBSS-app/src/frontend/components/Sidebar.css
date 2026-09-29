@@ -1,6 +1,6 @@
 .sidebar {
   position: fixed;
-  top: 56px; /* Set to the exact height of your TopNav */
+  top: 56px;
   left: 0;
   bottom: 0;
   width: 210px;
