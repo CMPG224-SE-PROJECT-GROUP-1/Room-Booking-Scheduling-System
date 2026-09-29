@@ -1,9 +1,11 @@
+import { useNavigate } from 'react-router-dom';
 import './Logo.css';
 
-export default function Logo(){
+export default function Logo({active = false}){
+    const navigate = useNavigate();
 
     const handleClick = () =>{
-        alert("LOGO CLICKED!");
+        if (active) {navigate("/dashboard")};
     }
 
     return (

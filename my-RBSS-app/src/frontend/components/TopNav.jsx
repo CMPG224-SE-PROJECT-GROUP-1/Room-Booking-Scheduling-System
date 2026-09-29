@@ -12,7 +12,7 @@ export default function TopNav() {
         <div className="hamburger" onClick={toggleSidebar}>
           <span /><span /><span />
         </div>
-        <Logo />
+        <Logo active={true} />
       </div>
       <div className="nav-right">
         <ThemeToggle />
