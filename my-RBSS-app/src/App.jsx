@@ -3,24 +3,41 @@ import "./App.css";
 import { LoginPage } from "./frontend/pages/LoginPage";
 import RecoverPassword from "./frontend/pages/RecoverPassword";
 import SignUp from "./frontend/pages/SignUp";
+import { Dashboard } from "./frontend/pages/Dashboard";
+import { SidebarProvider } from "./frontend/Sidebar/SidebarContext";
 import { ThemeProvider } from "./frontend/theme/ThemeContext";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import AppLayout from "./frontend/components/AppLayout";
+import BannerLayout from "./frontend/components/BannerLayout";
 
 
 function App() {
 
   return (
-    <BrowserRouter>
+    
       <ThemeProvider>
+        <SidebarProvider>
+          <BrowserRouter>
+            <Routes>
 
-        <Routes>
-            <Route path="/" element={<LoginPage/>} />
-            <Route path="/forgotpassword" element={<RecoverPassword/>} />
-            <Route path="/signup" element={<SignUp/>} />
-        </Routes>
+                <Route element={<AppLayout/>}>
 
+                  <Route path="/dashboard" element={<Dashboard/>} />
+
+                </Route>
+
+                <Route element={<BannerLayout/>}>
+
+                  <Route path="/signup" element={<SignUp/>} />
+                  <Route path="/" element={<LoginPage/>} />
+                  <Route path="/forgotpassword" element={<RecoverPassword/>} />
+
+                </Route>
+            </Routes>
+          </BrowserRouter>
+        </SidebarProvider>
     </ThemeProvider>
-    </BrowserRouter>
+    
     
   );
 }

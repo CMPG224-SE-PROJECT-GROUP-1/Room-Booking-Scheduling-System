@@ -1,7 +1,7 @@
 :root {
   --bg: #141210;
-  --panel: #1B1812;
-  --panel-alt: #221F18;
+  --panel: #362f20;
+  --panel-alt: #3f392c;
   --card: #1F1B14;
   --text-primary: #F6EFDC;
   --text-secondary: #EBD9A6;
@@ -11,12 +11,13 @@
   --accent-fill-text: #141210;
   --border: rgba(227, 190, 92, 0.20);
   --disabled: #b4b6af;
+  --text-card-color: rgba(255, 255, 255, 0.4);
 }
 
 [data-theme="light"] {
   --bg: #EFE9DA;
-  --panel: #F7F3E9;
-  --panel-alt: #EFE8D6;
+  --panel: #f0d07f;
+  --panel-alt: #f3dfab;
   --card: #FBF8F0;
   --text-primary: #1C1A16;
   --text-secondary: #4A4438;
@@ -26,6 +27,7 @@
   --accent-fill-text: #1C1A16;
   --border: rgba(28, 26, 22, 0.14);
   --disabled: #b4b6af;
+  --text-card-color: rgba(20, 9, 9, 0.4);
 }
 
 * { box-sizing: border-box; }

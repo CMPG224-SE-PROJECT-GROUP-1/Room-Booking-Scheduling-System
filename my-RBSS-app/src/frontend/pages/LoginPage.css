@@ -1,50 +1,70 @@
-.login-page {
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
   background: var(--ink-panel);
+  overflow: hidden;
+}
+
+.login-page {
+    min-height: 100vh;
+    background: var(--ink-panel);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.login-left {
+  flex: 1;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  padding-top: 64px;
+  background: var(--ink);
+  border-right: 1px solid var(--accent-fill);
+}
+
+.login-right {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 64px;
+  background: var(--ink-panel);
 }
 
 .login-form {
-  width: 360px;
-  background: var(--ink);
-  padding: 48px 40px;
-  border-radius: 8px;
+  width: 90%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
 }
 
 .login-form h1 {
   font-family: 'Fraunces', serif;
   font-weight: 600;
-  font-size: 22px;
+  font-size: 26px;
   color: var(--yellow-pale);
   margin: 0 0 30px;
 }
 
-.btn {
-  width: 100%;
-  margin-top: 10px;
-  background: var(--yellow);
-  color: var(--ink);
-  border: none;
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 700;
-  font-size: 14px;
-  padding: 14px 0;
-  border-radius: 4px;
-  cursor: pointer;
-  text-transform: uppercase;
-}
-
 .links {
-  
-
-
-  display: block;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
   font-family: 'JetBrains Mono', monospace;
   font-size: 10.5px;
   color: var(--yellow);
   text-transform: uppercase;
   letter-spacing: 1.2px;
-  margin-bottom: 8px;
+  margin-top: 16px;
+}
+
+.nav-link,
+.nav-link:visited {
+  color: inherit;
+  text-decoration: underline;
+  white-space: nowrap;
 }

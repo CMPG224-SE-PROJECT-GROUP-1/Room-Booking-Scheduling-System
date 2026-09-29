@@ -1,0 +1,12 @@
+.banner-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.banner-content {
+  padding-top: 60px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
