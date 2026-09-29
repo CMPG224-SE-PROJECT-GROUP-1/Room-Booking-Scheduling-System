@@ -17,8 +17,6 @@ export function LoginPage() {
 
   return (
     <div className="page-wrapper">
-      <TopNav />
-      <Sidebar />
 
       <main className="login-page">
         <section className="login-left">

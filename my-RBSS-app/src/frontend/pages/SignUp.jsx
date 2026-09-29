@@ -23,11 +23,6 @@ export default function SignUp(){
 
     return (
         <div className="page-wrapper">
-            <div className="">
-                <TopNav />
-                <Sidebar />
-            </div>
-
 
             <div className="signup-page">
                 <section className="signup-left">

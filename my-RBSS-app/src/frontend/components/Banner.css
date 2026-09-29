@@ -1,0 +1,20 @@
+.banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background: var(--ink-panel);
+  border-bottom: 1px solid var(--border);
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+.banner-left { display: flex; align-items: center; gap: 16px; }
+
+.banner-right { display: flex; align-items: center; gap: 18px; }
+

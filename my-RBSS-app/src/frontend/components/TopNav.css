@@ -1,13 +1,19 @@
 .topnav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px; 
   display: flex;
   align-items: center;
-  width: 100%;
   justify-content: space-between;
-  padding: 16px 28px;
-  background: var(--panel);
+  padding: 0 24px;
+  background: var(--ink-panel);
   border-bottom: 1px solid var(--border);
-  position: fixed;
+  z-index: 1000;
+  box-sizing: border-box;
 }
+
 .nav-left { display: flex; align-items: center; gap: 16px; }
 .hamburger { display: flex; flex-direction: column; gap: 4px; cursor: pointer; }
 .hamburger span { width: 20px; height: 2px; background: var(--text-secondary); }
