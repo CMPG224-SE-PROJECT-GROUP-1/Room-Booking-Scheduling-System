@@ -1,0 +1,50 @@
+.login-page {
+  min-height: 100vh;
+  background: var(--ink-panel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-form {
+  width: 360px;
+  background: var(--ink);
+  padding: 48px 40px;
+  border-radius: 8px;
+}
+
+.login-form h1 {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--yellow-pale);
+  margin: 0 0 30px;
+}
+
+.btn {
+  width: 100%;
+  margin-top: 10px;
+  background: var(--yellow);
+  color: var(--ink);
+  border: none;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 14px 0;
+  border-radius: 4px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.links {
+  
+
+
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--yellow);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 8px;
+}

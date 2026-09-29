@@ -1,25 +1,27 @@
 // import { useState } from "react";
 import "./App.css";
-import ClickableBox from './frontend/components/TestButton'
-import Button from './frontend/components/Button'
-import Logo from './frontend/components/Logo'
-import ThemeToggle from "./frontend/components/ThemeToggle";
-import TopNav from "./frontend/components/TopNav";
+import { LoginPage } from "./frontend/pages/LoginPage";
+import RecoverPassword from "./frontend/pages/RecoverPassword";
+import SignUp from "./frontend/pages/SignUp";
 import { ThemeProvider } from "./frontend/theme/ThemeContext";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 
 function App() {
 
   return (
-    <ThemeProvider>
-      <div>
-        <TopNav/>
-        <Button variant="solid" fullWidth>Sign in</Button>
-        <ClickableBox text="HELLO, WORLD"/>
-        <Button variant="outline" fullWidth>Cancel</Button>
+    <BrowserRouter>
+      <ThemeProvider>
 
-      </div>
+        <Routes>
+            <Route path="/" element={<LoginPage/>} />
+            <Route path="/forgotpassword" element={<RecoverPassword/>} />
+            <Route path="/signup" element={<SignUp/>} />
+        </Routes>
+
     </ThemeProvider>
+    </BrowserRouter>
+    
   );
 }
 

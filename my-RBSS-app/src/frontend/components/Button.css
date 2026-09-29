@@ -22,4 +22,11 @@
   color: var(--text-secondary);
 }
 
+.btn-disabled { 
+  background: var(--disabled); 
+  cursor: not-allowed;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
 .btn:disabled { opacity: 0.4; cursor: not-allowed; }
