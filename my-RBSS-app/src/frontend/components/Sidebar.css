@@ -1,0 +1,14 @@
+.sidebar {
+  width: 210px;
+  background: var(--panel-alt);
+  border-right: 1px solid var(--border);
+  padding: 28px 22px;
+  transition: width 0.25s ease, padding 0.25s ease;
+  overflow: hidden;
+}
+.sidebar-collapsed {
+  width: 0;
+  padding-left: 0;
+  padding-right: 0;
+  border-right: none;
+}

@@ -3,6 +3,8 @@ import Field from "../components/Field";
 import PasswordField from "../components/PasswordField";
 import ConfirmField from "../components/ConfirmField";
 import Button from "../components/Button";
+import Sidebar from "../components/Sidebar";
+import TopNav from "../components/TopNav";
 
 export default function SignUp(){
 
@@ -20,6 +22,10 @@ export default function SignUp(){
 
     return (
         <div className="signup-page">
+            <div className="">
+                <TopNav />
+                <Sidebar />
+            </div>
             <form className="signup-form" onSubmit={handleSubmit}>
 
                 <h1>Create your account</h1>
