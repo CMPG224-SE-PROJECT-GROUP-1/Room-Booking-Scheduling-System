@@ -10,8 +10,8 @@ export function scorePassword(value){
 
 export const STRENGTH_LABELS = [
   'needs more ink',
-  'needs more ink',
-  'getting darker',
+  'needs a bit more ink',
+  'getting bit darker',
   'getting darker',
   'strong, full ink',
   'strong, full ink',

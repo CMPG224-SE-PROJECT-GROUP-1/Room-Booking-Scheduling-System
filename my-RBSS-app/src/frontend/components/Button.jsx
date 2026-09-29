@@ -1,8 +1,10 @@
 import './Button.css'
 
-export default function Button({variant = 'solid', fullWidth, children, ...rest}){
+export default function Button({active = true, variant = 'solid', fullWidth, children, ...rest}){
 
-    const classes = `btn btn-${variant} ${fullWidth ? 'btn-full':''}`
+    const state = (active ? variant: 'disabled');
+
+    const classes = `btn btn-${state} ${fullWidth ? 'btn-full':''}`.trim();
 
     return (
         <button className={classes} {...rest}>

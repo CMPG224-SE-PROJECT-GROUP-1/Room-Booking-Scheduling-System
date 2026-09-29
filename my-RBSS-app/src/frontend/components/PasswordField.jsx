@@ -1,4 +1,6 @@
 import { scorePassword, STRENGTH_LABELS } from "../utils/passwordScore";
+import Field from "./Field";
+import './PasswordField.css';
 
 
 export default function PasswordField({value, onChange}){
@@ -29,6 +31,4 @@ export default function PasswordField({value, onChange}){
 
         </div>
     )
-
-
 }

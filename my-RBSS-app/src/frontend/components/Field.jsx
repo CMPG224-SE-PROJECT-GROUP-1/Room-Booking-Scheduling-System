@@ -16,7 +16,7 @@ export default function Field({id, label, type = 'text', placeholder, value, onC
                 value = {value}
                 onChange = {onChange}
                 onFocus ={() => setFocused(true)}
-                onBlur ={() => setBlur(false)}
+                onBlur ={() => setFocused(false)}
                 
                 />
                 <div className="underline"/>

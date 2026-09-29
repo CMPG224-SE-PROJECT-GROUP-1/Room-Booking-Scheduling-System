@@ -22,4 +22,6 @@
   color: var(--text-secondary);
 }
 
+.btn-disabled { opacity: 0.4; cursor: not-allowed; }
+
 .btn:disabled { opacity: 0.4; cursor: not-allowed; }

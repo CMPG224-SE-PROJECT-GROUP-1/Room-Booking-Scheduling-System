@@ -1,7 +1,63 @@
+import { useState } from "react";
+import Field from "../components/Field";
+import PasswordField from "../components/PasswordField";
+import ConfirmField from "../components/ConfirmField";
+import Button from "../components/Button";
+
 export default function SignUp(){
+
+    const [name, setName] = useState('');
+    const [uniNumber, setUniNumber] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirm, setConfirm] = useState('');
+    const [passMatch, setPassMatch] = useState(false);
+
+    function handleSubmit(event){
+        event.preventDefault();
+        alert("CREATED NEW ACCOUNT!");
+    }
+
+
     return (
-        <div>
-            <h1>SIGN UP</h1>
+        <div className="signup-page">
+            <form className="signup-form" onSubmit={handleSubmit}>
+
+                <h1>Create your account</h1>
+                <p className="sub">Takes about a minute -- use your University Number and Email</p>
+
+                <Field
+                    id="name"
+                    label="Name and Surname"
+                    placeholder="e.g Neo Masebe"
+                    value = {name}
+                    onChange={(e) => setName(e.target.value)}
+    
+                />
+
+                <Field
+                    id="uni"
+                    label="University Number"
+                    placeholder="e.g S123456"
+                    value = {uniNumber}
+                    onChange={(e) => setUniNumber(e.target.value)}
+    
+                />
+
+                <PasswordField
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+
+                <ConfirmField
+                    value={confirm}
+                    onChange={(e) => setConfirm(e.target.value)}
+                    passwordValue={password}
+                />
+
+                <Button active={true}>Create Account</Button>
+
+            </form>
+
         </div>
     )
 }
