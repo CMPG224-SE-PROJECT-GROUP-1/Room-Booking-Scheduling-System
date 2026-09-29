@@ -5,6 +5,7 @@ import ConfirmField from "../components/ConfirmField";
 import Button from "../components/Button";
 import Sidebar from "../components/Sidebar";
 import TopNav from "../components/TopNav";
+import './SignUp.css'
 
 export default function SignUp(){
 
@@ -21,12 +22,16 @@ export default function SignUp(){
 
 
     return (
-        <div className="signup-page">
+        <div className="page-wrapper">
             <div className="">
                 <TopNav />
                 <Sidebar />
             </div>
-            <form className="signup-form" onSubmit={handleSubmit}>
+
+
+            <div className="signup-page">
+                <section className="signup-left">
+                <form className="signup-form" onSubmit={handleSubmit}>
 
                 <h1>Create your account</h1>
                 <p className="sub">Takes about a minute -- use your University Number and Email</p>
@@ -62,9 +67,16 @@ export default function SignUp(){
                     
                 />
 
-                <Button active={passMatch}>Create Account</Button>
+                <Button active={passMatch} type="submit">Create Account</Button>
 
             </form>
+                </section>
+                
+                <section className="signup-right">
+                    <h1>HI</h1>
+                </section>
+            </div>
+            
 
         </div>
     )
