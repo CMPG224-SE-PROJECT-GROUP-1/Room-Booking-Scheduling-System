@@ -1,7 +1,7 @@
 :root {
   --bg: #141210;
-  --panel: #1B1812;
-  --panel-alt: #221F18;
+  --panel: #362f20;
+  --panel-alt: #3f392c;
   --card: #1F1B14;
   --text-primary: #F6EFDC;
   --text-secondary: #EBD9A6;
@@ -15,8 +15,8 @@
 
 [data-theme="light"] {
   --bg: #EFE9DA;
-  --panel: #F7F3E9;
-  --panel-alt: #EFE8D6;
+  --panel: #f0d07f;
+  --panel-alt: #f3dfab;
   --card: #FBF8F0;
   --text-primary: #1C1A16;
   --text-secondary: #4A4438;

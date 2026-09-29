@@ -1,14 +1,25 @@
 .sidebar {
+  position: fixed;
+  top: 56px; /* Set to the exact height of your TopNav */
+  left: 0;
+  bottom: 0;
   width: 210px;
   background: var(--panel-alt);
   border-right: 1px solid var(--border);
   padding: 28px 22px;
-  transition: width 0.25s ease, padding 0.25s ease;
+  transition: width 0.25s ease, padding 0.25s ease, transform 0.25s ease;
   overflow: hidden;
+  z-index: 100;
 }
+
 .sidebar-collapsed {
   width: 0;
-  padding-left: 0;
-  padding-right: 0;
+  padding: 0;
   border-right: none;
+}
+
+.nav-link,
+.nav-link:visited {
+  color: inherit;
+  text-decoration: underline;
 }
