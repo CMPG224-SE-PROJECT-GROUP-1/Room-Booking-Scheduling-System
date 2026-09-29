@@ -10,6 +10,7 @@
   --accent-fill: #E3BE5C;
   --accent-fill-text: #141210;
   --border: rgba(227, 190, 92, 0.20);
+  --disabled: #b4b6af;
 }
 
 [data-theme="light"] {
@@ -24,6 +25,7 @@
   --accent-fill: #E3BE5C;
   --accent-fill-text: #1C1A16;
   --border: rgba(28, 26, 22, 0.14);
+  --disabled: #b4b6af;
 }
 
 * { box-sizing: border-box; }

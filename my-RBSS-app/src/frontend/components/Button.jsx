@@ -7,7 +7,7 @@ export default function Button({active = true, variant = 'solid', fullWidth, chi
     const classes = `btn btn-${state} ${fullWidth ? 'btn-full':''}`.trim();
 
     return (
-        <button className={classes} {...rest}>
+        <button className={classes} disabled={!active} {...rest}>
             {children}
         </button>
     )

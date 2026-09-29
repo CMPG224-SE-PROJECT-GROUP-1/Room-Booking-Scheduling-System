@@ -22,13 +22,14 @@ export default function PasswordField({value, onChange}){
             />
 
             <div className="meter-row">
-                <div className="meter-track">
-                    <div className="meter-fill" style={{ width: `${pct}%`}}/>
-                </div>
                 <span className={`meter-label ${strong ? 'strong' : ''}`}>{label}</span>
             </div>
 
 
         </div>
     )
+
+    // <div className="meter-track">
+    //                <div className="meter-fill" style={{ width: `${pct}%`}}/>
+    //            </div>
 }

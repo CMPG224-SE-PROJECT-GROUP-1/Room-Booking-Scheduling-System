@@ -51,10 +51,12 @@ export default function SignUp(){
                 <ConfirmField
                     value={confirm}
                     onChange={(e) => setConfirm(e.target.value)}
+                    onValidate={(valid) => setPassMatch(valid)}
                     passwordValue={password}
+                    
                 />
 
-                <Button active={true}>Create Account</Button>
+                <Button active={passMatch}>Create Account</Button>
 
             </form>
 

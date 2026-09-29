@@ -1,13 +1,19 @@
 import Field from './Field';
 import './ConfirmField.css';
-import { useState } from 'react';
+import { useEffect } from 'react';
 
-export default function ConfirmField({ value, onChange, passwordValue }) {
+export default function ConfirmField({ value, onChange, onValidate, passwordValue }) {
     const hasInput = value.length > 0;
     const matches = hasInput && value === passwordValue;
 
-    let text = 'passwords will be checked here';
+    let text = '';
     if (hasInput) text = matches ? 'stamped — passwords match' : "doesn't match yet";
+
+    // Trigger the callback whenever validity changes
+    useEffect(() => {
+        const valid = matches;
+        onValidate?.(valid);
+    }, [value, passwordValue, onValidate]);
 
 
     return (
