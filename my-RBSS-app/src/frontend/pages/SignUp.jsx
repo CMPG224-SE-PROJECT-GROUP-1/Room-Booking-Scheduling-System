@@ -15,6 +15,8 @@ export default function SignUp(){
     const [confirm, setConfirm] = useState('');
     const [passMatch, setPassMatch] = useState(false);
 
+
+
     function handleSubmit(event){
         event.preventDefault();
         alert("CREATED NEW ACCOUNT!");
