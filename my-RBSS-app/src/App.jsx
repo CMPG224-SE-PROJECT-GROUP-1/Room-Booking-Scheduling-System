@@ -9,6 +9,7 @@ import { ThemeProvider } from "./frontend/theme/ThemeContext";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import AppLayout from "./frontend/components/AppLayout";
 import BannerLayout from "./frontend/components/BannerLayout";
+import VerifySignup from "./frontend/pages/VerifySignup";
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
                   <Route path="/signup" element={<SignUp/>} />
                   <Route path="/" element={<LoginPage/>} />
                   <Route path="/forgotpassword" element={<RecoverPassword/>} />
+                  <Route path="/verifyotp" element={<VerifySignup/>} />
 
                 </Route>
             </Routes>

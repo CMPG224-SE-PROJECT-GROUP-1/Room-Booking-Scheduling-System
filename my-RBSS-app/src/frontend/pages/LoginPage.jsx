@@ -28,7 +28,6 @@ export function LoginPage() {
             return;
         }
 
-        // Construct email
         const email = `${cleanUniNumber}@university.ac.za`;
 
         setLoading(true);
@@ -88,6 +87,16 @@ export function LoginPage() {
                         <Button type="submit" disabled={loading}>
                             {loading ? "Signing In..." : "Sign In"}
                         </Button>
+
+                        <div className="links">
+                            <Link to="/forgotpassword" className="nav-link">
+                                Forgot your password?
+                            </Link>
+                            <Link to="/signup" className="nav-link">
+                                Create new account
+                            </Link>
+                        </div>
+                        
                     </form>
                 </section>
 
