@@ -3,8 +3,6 @@ import Field from "../components/Field";
 import PasswordField from "../components/PasswordField";
 import ConfirmField from "../components/ConfirmField";
 import Button from "../components/Button";
-import Sidebar from "../components/Sidebar";
-import TopNav from "../components/TopNav";
 import './SignUp.css';
 import { authService } from "../../backend/User";
 import { useNavigate } from "react-router-dom";
@@ -23,12 +21,13 @@ export default function SignUp() {
         e.preventDefault();
         setErrorMsg(null);
 
-        const email = `${uniNumber}@university.ac.za`;
+        const cleanUni = uniNumber.trim();
+        const email = authService.formatStudentEmail(cleanUni);
 
         setLoading(true);
         try {
-            await authService.newSignUp(name, uniNumber, email, password);
-            navigate('/verifyotp', { state: 'neomasebe9@gmail.com' });
+            await authService.newSignUp(name, cleanUni, password);
+            navigate('/verifyotp', { state: { email } });
         } catch (err) {
             setErrorMsg(err.message || "Failed to sign up.");
         } finally {
@@ -37,16 +36,16 @@ export default function SignUp() {
     };
 
     return (
-        <div className="page-wrapper">
-            <div className="signup-page">
-                <section className="signup-left">
-                    <form className="signup-form" onSubmit={onSignUp}>
-                        <h1>Create your account</h1>
-                        <p className="sub">Takes about a minute -- use your University Number and Email</p>
+        <div className="page-wrapper"> {}
+            <div className="signup-page"> {}
+                <section className="signup-left"> {}
+                    <form className="signup-form" onSubmit={onSignUp}> {}
+                        <h1>Create your account</h1> {}
+                        <p className="sub">Takes about a minute -- use your University Number</p>
 
                         {errorMsg && (
-                            <p className="error-text" style={{ color: "red", fontSize: "0.9rem" }}>
-                                {errorMsg}
+                            <p className="error-text" style={{ color: "red", fontSize: "0.9rem" }}> {}
+                                {errorMsg} {}
                             </p>
                         )}
 
@@ -83,13 +82,13 @@ export default function SignUp() {
                             disabled={!passMatch || loading} 
                             type="submit"
                         >
-                            {loading ? "Creating Account..." : "Create Account"}
+                            {loading ? "Creating Account..." : "Create Account"} {}
                         </Button>
                     </form>
                 </section>
 
-                <section className="signup-right">
-                    <h1>HI</h1>
+                <section className="signup-right"> {}
+                    <h1>HI</h1> {}
                 </section>
             </div>
         </div>

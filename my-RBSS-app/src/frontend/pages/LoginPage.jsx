@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Field from "../components/Field";
 import Button from "../components/Button";
 import './LoginPage.css';
@@ -7,7 +7,6 @@ import { authService } from '../../backend/User.js';
 
 export function LoginPage() {
     const [uniNumber, setUniNumber] = useState('');
-    const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [errorMsg, setErrorMsg] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -28,23 +27,19 @@ export function LoginPage() {
             return;
         }
 
-        const email = `${cleanUniNumber}@university.ac.za`;
+        const email = authService.formatStudentEmail(cleanUniNumber);
 
         setLoading(true);
         try {
-            const data = await authService.authenticate(email, password);
+            const data = await authService.authenticate(cleanUniNumber, password);
 
-            if (data.session){
-              alert(`Signed in! with ID: ${data.user.id} and token: ${data.session.access_token}`)
-              navigate('/dashboard');
+            if (data.session) {
+                navigate('/dashboard');
             }
         } catch (err) {
             setErrorMsg(err.message || "Failed to sign in.");
         } finally {
             setLoading(false);
-
-            
-            
         }
     };
 
@@ -58,14 +53,6 @@ export function LoginPage() {
                         {errorMsg && (
                             <p style={{ color: "red", fontSize: "0.9rem" }}>{errorMsg}</p>
                         )}
-
-                        <Field
-                            id="name"
-                            label="Name and Surname"
-                            placeholder="e.g Neo Masebe"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                        />
 
                         <Field
                             id="university-number"
@@ -96,12 +83,11 @@ export function LoginPage() {
                                 Create new account
                             </Link>
                         </div>
-                        
                     </form>
                 </section>
 
-                <section className="login-left">
-                  <h3>HELLO</h3>
+                <section className="login-right">
+                    <h3>HELLO</h3>
                 </section>
             </main>
         </div>

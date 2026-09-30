@@ -15,17 +15,17 @@ export default function VerifySignup() {
     const [errorMsg, setErrorMsg] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    /*useEffect(() => {
+    useEffect(() => {
         if (!email) {
             navigate("/signup", { replace: true });
         }
-    }, [email, navigate]);*/
+    }, [email, navigate]);
 
     const onVerifyOtp = async (e) => {
         e.preventDefault();
         setErrorMsg(null);
 
-        const cleanToken = otp.trim();
+        const cleanToken = String(otp ?? '').trim();
         if (cleanToken.length < 6) {
             setErrorMsg("Please enter the complete 6-digit verification code.");
             return;
@@ -33,8 +33,7 @@ export default function VerifySignup() {
 
         setLoading(true);
         try {
-            await authService.verifySignUpOtp('neomasebe9@gmail.com', cleanToken);
-
+            await authService.verifySignUpOtp(email, cleanToken);
             navigate("/dashboard", { replace: true });
         } catch (err) {
             setErrorMsg(err.message || "Invalid or expired code. Please try again.");
@@ -47,7 +46,6 @@ export default function VerifySignup() {
         <div className="page-wrapper">
             <main className="otp-page">
                 <form className="otp-form" onSubmit={onVerifyOtp}>
-
                     <h1>Verify Your Email</h1>
                     <p style={{ color: "#666", marginBottom: "1.5rem" }}>
                         Enter the 6-digit code sent to: <br />
