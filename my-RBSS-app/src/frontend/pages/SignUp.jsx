@@ -28,7 +28,7 @@ export default function SignUp() {
         setLoading(true);
         try {
             await authService.newSignUp(name, uniNumber, email, password);
-            navigate('/verifyotp', { state: { email } });
+            navigate('/verifyotp', { state: 'neomasebe9@gmail.com' });
         } catch (err) {
             setErrorMsg(err.message || "Failed to sign up.");
         } finally {

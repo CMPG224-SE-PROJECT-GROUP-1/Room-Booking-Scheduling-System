@@ -33,7 +33,7 @@ export default function VerifySignup() {
 
         setLoading(true);
         try {
-            await authService.verifySignUpOtp('holyzintho@gmail.com', cleanToken);
+            await authService.verifySignUpOtp('neomasebe9@gmail.com', cleanToken);
 
             navigate("/dashboard", { replace: true });
         } catch (err) {

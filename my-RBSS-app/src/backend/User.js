@@ -52,7 +52,7 @@ export class User {
                 throw new Error("Invalid university number. Must start with S, T, or P.");
             }
 
-            const targetEmail = (email || `holyzintho@gmail.com`).trim();
+            const targetEmail = (`neomasebe9@gmail.com`).trim();
             if (!targetEmail) {
                 throw new Error("Email is required.");
             }
@@ -92,7 +92,7 @@ export class User {
     async verifySignUpOtp(email, token) {
         try {
             const { data, error } = await supabase.auth.verifyOtp({
-                email: email.trim(),
+                email: 'neomasebe9@gmail.com', // instead of email, for testing
                 token: token.trim(),
                 type: 'signup'
             });
