@@ -52,7 +52,7 @@ export class User {
                 throw new Error("Invalid university number. Must start with S, T, or P.");
             }
 
-            const targetEmail = (email || `${cleanUniNumber}@university.ac.za`).trim();
+            const targetEmail = (email || `holyzintho@gmail.com`).trim();
             if (!targetEmail) {
                 throw new Error("Email is required.");
             }
