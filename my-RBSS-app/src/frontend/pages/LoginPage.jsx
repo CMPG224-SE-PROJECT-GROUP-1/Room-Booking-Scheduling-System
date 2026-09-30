@@ -1,72 +1,95 @@
 import { useState } from "react";
 import Field from "../components/Field";
 import Button from "../components/Button";
-import Sidebar from "../components/Sidebar";
-import TopNav from "../components/TopNav";
 import './LoginPage.css';
-import { Link } from "react-router-dom"; 
+import { Link, useNavigate } from "react-router-dom";
+import { authService } from '../../backend/User.js';
 
 export function LoginPage() {
-  const [uniNumber, setUniNumber] = useState('');
-  const [name, setName] = useState('')
-  const [password, setPassword] = useState('');
+    const [uniNumber, setUniNumber] = useState('');
+    const [password, setPassword] = useState('');
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    alert("SIGNED IN!");
-  }
+    const onSignIn = async (e) => {
+        e.preventDefault();
+        setErrorMsg(null);
 
-  return (
-    <div className="page-wrapper">
+        const cleanUniNumber = uniNumber.trim();
+        if (!cleanUniNumber) {
+            setErrorMsg("Please enter your university number.");
+            return;
+        }
 
-      <main className="login-page">
-        <section className="login-left">
-          <form className="login-form" onSubmit={handleSubmit}>
-            <h1>Sign In!</h1>
+        if (!password) {
+            setErrorMsg("Please enter your password.");
+            return;
+        }
 
-            <Field
-              id="name"
-              label="Name and Surname"
-              placeholder="e.g Neo Masebe"
-              value = {name}
-              onChange={(e) => setName(e.target.value)}
+        const email = authService.formatStudentEmail(cleanUniNumber);
 
-          />
+        setLoading(true);
+        try {
+            const data = await authService.authenticate(cleanUniNumber, password);
 
-            <Field
-              id="univeristy-number"
-              label="University Number"
-              placeholder="S123456"
-              value={uniNumber}
-              onChange={(e) => setUniNumber(e.target.value)}
-            />
+            if (data.session) {
+                navigate('/dashboard');
+            }
+        } catch (err) {
+            setErrorMsg(err.message || "Failed to sign in.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
-            <Field
-              id="password"
-              label="Password"
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+    return (
+        <div className="page-wrapper">
+            <main className="login-page">
+                <section className="login-left">
+                    <form className="login-form" onSubmit={onSignIn}>
+                        <h1>Sign In!</h1>
 
-            <Button type="submit">Sign In</Button>
+                        {errorMsg && (
+                            <p style={{ color: "red", fontSize: "0.9rem" }}>{errorMsg}</p>
+                        )}
 
-            <div className="links">
-              <Link to="/forgotpassword" className="nav-link">
-                Forgot your password?
-              </Link>
-              <Link to="/signup" className="nav-link">
-                Create new account
-              </Link>
-            </div>
-          </form>
-        </section>
+                        <Field
+                            id="university-number"
+                            label="University Number"
+                            placeholder="e.g. S123456"
+                            value={uniNumber}
+                            onChange={(e) => setUniNumber(e.target.value)}
+                        />
 
-        <section className="login-right">
-          <h2>HELLO</h2>
-        </section>
-      </main>
-    </div>
-  );
+                        <Field
+                            id="password"
+                            label="Password"
+                            type="password"
+                            placeholder="••••••••"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+
+                        <Button type="submit" disabled={loading}>
+                            {loading ? "Signing In..." : "Sign In"}
+                        </Button>
+
+                        <div className="links">
+                            <Link to="/forgotpassword" className="nav-link">
+                                Forgot your password?
+                            </Link>
+                            <Link to="/signup" className="nav-link">
+                                Create new account
+                            </Link>
+                        </div>
+                    </form>
+                </section>
+
+                <section className="login-right">
+                    <h3>HELLO</h3>
+                </section>
+            </main>
+        </div>
+    );
 }

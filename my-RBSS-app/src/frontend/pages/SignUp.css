@@ -1,57 +1,60 @@
 .page-wrapper {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: var(--ink-panel);
-  overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: var(--ink-panel);
+    overflow: hidden;
 }
 
 .signup-page {
-  min-height: 100vh;
-  background: var(--ink-panel);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
+    flex: 1; 
+    width: 100%;
+    display: flex;
+    align-items: stretch; 
+    background: var(--ink-panel);
+    
 }
 
 .signup-left {
-  flex: 1;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding-top: 64px;
-  background: var(--ink);
-  border-right: 1px solid var(--accent-fill);
+    flex: 1 1 50%; 
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+    padding: 40px 24px;
+    background: var(--ink);
+    border-right: 1px solid var(--accent-fill);
 }
 
 .signup-right {
-  flex: 1;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding-top: 64px;
-  background: var(--ink-panel);
+    flex: 1 1 50%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    background: var(--ink-panel);
 }
 
 .signup-form {
-  width: 90%;
-  background: var(--ink);
-  padding: 48px 40px;
-  border-radius: 8px;
+    width: 100%;
+    max-width: 400px; 
+    background: var(--ink);
+    padding: 40px 32px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
 }
 
 .signup-form h1 {
-  font-family: 'Fraunces', serif;
-  font-weight: 600;
-  font-size: 24px;
-  color: var(--yellow-pale);
-  margin: 0 0 6px;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 26px;
+    color: var(--yellow-pale);
+    margin: 0 0 8px;
 }
 
 .signup-form .sub {
-  font-size: 13px;
-  color: #8a8064;
-  margin: 0 0 30px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: #8a8064;
+    margin: 0 0 28px;
 }
-
