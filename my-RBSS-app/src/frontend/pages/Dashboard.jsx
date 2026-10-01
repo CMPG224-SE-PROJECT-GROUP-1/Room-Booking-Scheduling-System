@@ -1,57 +1,116 @@
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import './Dashboard.css';
-import Card from '../components/Card';
-import TopNav from "../components/TopNav";
-import Sidebar from "../components/Sidebar";
+import Card from "../components/Card";
 import Button from "../components/Button";
 import TextCard from "../components/TextCard";
+import { BookingManager } from "../../backend/BookingManager";
+import { supabase } from "../../supabaseClient";
+import "./Dashboard.css";
 
-export function Dashboard(){
-    const navigate = useNavigate();
+export function Dashboard() {
+  const navigate = useNavigate();
 
-    return (
-        <div className="app=frame">
+  const [userName, setUserName] = useState("User");
+  const [availableCount, setAvailableCount] = useState(0);
+  const [upcomingCount, setUpcomingCount] = useState(0);
+  const [loading, setLoading] = useState(true);
 
-            <TextCard
-            tag="Notice & Updates"
-            title="Welcome back, Neo."
-            metaLeft="SYSTEM ANNOUNCEMENT"
-            metaRight="OCT 24, 2026"
-            >
-                <p>
-                    Maintenance is scheduled for Study Hall B this Thursday between 18:00 and 21:00.
-                    Room bookings remain open for all secondary halls.
-                </p>
-            </TextCard>
+  const currentDate = useMemo(() => {
+    return new Date()
+      .toLocaleDateString("en-US", {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      })
+      .toUpperCase();
+  }, []);
 
-            <div className="home-body">
+  useEffect(() => {
+    async function initializeDashboard() {
+      try {
+        setLoading(true);
 
-                <div className="home-main">
+        const { data: { user } } = await supabase.auth.getUser();
 
-                    <div className="stat-row">
+        if (user) {
+          const displayName =
+            user.user_metadata?.first_name ||
+            user.user_metadata?.full_name?.split(" ")[0] ||
+            user.user_metadata?.name ||
+            user.email?.split("@")[0] ||
+            "User";
 
-                        <Card className="stat-card">
-                            <span className="num">10</span>
-                            <span className="lbl">Available Rooms</span>
-                        </Card>
+          setUserName(displayName.charAt(0).toUpperCase() + displayName.slice(1));
+        }
 
-                        <Card className="stat-card">
-                            <span className="num">4</span>
-                            <span className="lbl">Upcoming Bookings</span>
-                        </Card>`
+        const rooms = await BookingManager.searchRooms({});
+        const activeRooms = (rooms || []).filter((r) => r.availability === true);
 
-                    </div>
+        const bookings = await BookingManager.fetchBookings();
+        const now = new Date();
+        const upcoming = (bookings || []).filter(
+          (b) => b.status === true && new Date(b.end_time) >= now
+        );
 
-                    <Button variant="solid" fullWidth onClick={() => navigate('/browse')}>
-                        Book New Room
-                    </Button>
+        setAvailableCount(activeRooms.length);
+        setUpcomingCount(upcoming.length);
+      } catch (err) {
+        console.error("Failed to load dashboard data:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
 
-                </div>
+    initializeDashboard();
+  }, []);
 
+    const handleUpcomingClick = () =>{
+        navigate("/mybookings");
+    }
 
-            </div>
+    const handleAvailClick = () =>{
+        navigate("/browse");
+    }
 
+  return (
+    <div className="app-frame">
+      <TextCard
+        tag="Notice & Updates"
+        title={`Welcome back, ${userName}.`}
+        metaLeft="SYSTEM ANNOUNCEMENT"
+        metaRight={currentDate}
+      >
+        <p>
+          Maintenance is scheduled for Study Hall B this Thursday between 18:00
+          and 21:00. Room bookings remain open for all secondary halls.
+        </p>
+      </TextCard>
 
+      <div className="home-body">
+        <div className="home-main">
+          <div className="stat-row">
+            <Card className="stat-card" onClick={handleAvailClick}>
+              <span className="num">{loading ? "—" : availableCount}</span>
+              <span className="lbl">Available Rooms</span>
+            </Card>
+
+            <Card className="stat-card" onClick={handleUpcomingClick}>
+              <span className="num">{loading ? "—" : upcomingCount}</span>
+              <span className="lbl">Upcoming Bookings</span>
+            </Card>
+          </div>
+
+          <Button
+            variant="solid"
+            fullWidth
+            onClick={() => navigate("/browse")}
+          >
+            Book New Room
+          </Button>
         </div>
-    )
+      </div>
+    </div>
+  );
 }
+
+export default Dashboard;

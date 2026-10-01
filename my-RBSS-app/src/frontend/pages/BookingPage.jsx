@@ -12,10 +12,8 @@ export default function BookingPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Modal open/close state
   const [isViewerOpen, setIsViewerOpen] = useState(false);
 
-  // Retrieve room & slot passed from Browse.jsx; provide safe fallbacks
   const currentRoom = location.state?.room || {
     room_id: 204,
     room_number: 'L-204',

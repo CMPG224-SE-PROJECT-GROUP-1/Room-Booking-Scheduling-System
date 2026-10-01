@@ -13,6 +13,7 @@ import VerifySignup from "./frontend/pages/VerifySignup";
 import Browse from "./frontend/pages/Browse";
 import BookingPage from "./frontend/pages/BookingPage";
 import ConfirmationPage from "./frontend/pages/ConfirmationPage";
+import MyBookings from "./frontend/pages/MyBookings";
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
                   <Route path="/browse" element={<Browse/>} />
                   <Route path="/booking" element={<BookingPage/>} />
                   <Route path="/confirmation" element={<ConfirmationPage/>} />
+                  <Route path="/mybookings" element={<MyBookings/>} />
 
                 </Route>
 
