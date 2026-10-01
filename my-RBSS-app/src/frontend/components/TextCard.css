@@ -2,8 +2,8 @@
   width: 100%;
   box-sizing: border-box;
   background: var(--ink-panel);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--yellow);
+  border: 2px solid var(--border);
+  border-left: 2px solid var(--border);
   border-radius: 6px;
   padding: 20px 24px;
   display: flex;
