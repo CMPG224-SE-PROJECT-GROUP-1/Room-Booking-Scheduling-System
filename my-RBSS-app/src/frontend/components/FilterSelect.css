@@ -1,0 +1,41 @@
+.select-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.real-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 100%;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 10px 32px 10px 12px;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.real-select:focus {
+  border-color: var(--accent-fill, #d4a373);
+}
+
+.real-select option {
+  background: var(--ink-panel);
+  color: var(--text-secondary);
+}
+
+.select-arrow {
+  position: absolute;
+  right: 12px;
+  pointer-events: none;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1;
+}

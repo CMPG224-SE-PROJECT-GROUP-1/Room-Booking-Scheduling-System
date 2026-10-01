@@ -10,6 +10,10 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import AppLayout from "./frontend/components/AppLayout";
 import BannerLayout from "./frontend/components/BannerLayout";
 import VerifySignup from "./frontend/pages/VerifySignup";
+import Browse from "./frontend/pages/Browse";
+import BookingPage from "./frontend/pages/BookingPage";
+import ConfirmationPage from "./frontend/pages/ConfirmationPage";
+import MyBookings from "./frontend/pages/MyBookings";
 
 
 function App() {
@@ -24,6 +28,10 @@ function App() {
                 <Route element={<AppLayout/>}>
 
                   <Route path="/dashboard" element={<Dashboard/>} />
+                  <Route path="/browse" element={<Browse/>} />
+                  <Route path="/booking" element={<BookingPage/>} />
+                  <Route path="/confirmation" element={<ConfirmationPage/>} />
+                  <Route path="/mybookings" element={<MyBookings/>} />
 
                 </Route>
 

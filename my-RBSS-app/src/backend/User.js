@@ -39,7 +39,7 @@ export class User {
 
         if (error) throw error;
 
-        // Verify student number against the profiles table
+        
         if (data?.user) {
             const { data: profile, error: profileErr } = await supabase
                 .from('profiles')

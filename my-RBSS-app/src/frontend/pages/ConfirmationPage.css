@@ -1,0 +1,43 @@
+.confirm-body { 
+    display: grid; grid-template-columns: 1fr 1fr; min-height: 400px; 
+}
+
+.confirm-body h2 { 
+    font-family: 'Fraunces', serif; font-size: 20px; color: #F6EFDC; margin: 0 0 16px; 
+}
+
+.confirm-right { 
+    padding: 34px 32px; 
+}
+
+.rules-card { 
+    margin-bottom: 20px; 
+}
+
+.rules-card h4 { 
+    font-family: 'Space Grotesk', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-text); margin: 0 0 12px; 
+}
+
+.rules-card ul { 
+    margin: 0; 
+    padding-left: 16px; 
+}
+
+.rules-card li { 
+    font-size: 13px; 
+    color: var(--text-secondary); 
+    margin-bottom: 6px; 
+}
+
+.check-row { 
+    display: flex; 
+    align-items: flex-start; 
+    gap: 10px; 
+    font-size: 13px; 
+    color: var(--text-secondary); 
+    margin-bottom: 20px; 
+    cursor: pointer; }
+
+.check-row input { 
+    margin-top: 3px; 
+    accent-color: var(--accent-fill); }
