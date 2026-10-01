@@ -12,6 +12,7 @@
   --border: rgba(227, 190, 92, 0.20);
   --disabled: #b4b6af;
   --text-card-color: rgba(255, 255, 255, 0.4);
+  --avail-slot: #52c41a;
 }
 
 [data-theme="light"] {
@@ -20,14 +21,15 @@
   --panel-alt: #f3dfab;
   --card: #FBF8F0;
   --text-primary: #1C1A16;
-  --text-secondary: #4A4438;
+  --text-secondary: #272625;
   --text-muted: #8a7f61;
-  --accent-text: #9C6F1E;
+  --accent-text: #583c07;
   --accent-fill: #E3BE5C;
   --accent-fill-text: #1C1A16;
   --border: rgba(28, 26, 22, 0.14);
   --disabled: #b4b6af;
   --text-card-color: rgba(20, 9, 9, 0.4);
+  --avail-slot: #47b41c;
 }
 
 * { box-sizing: border-box; }
