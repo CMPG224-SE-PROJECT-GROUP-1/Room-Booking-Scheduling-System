@@ -7,64 +7,53 @@
 }
 
 .login-page {
-    min-height: 100vh;
-    background: var(--ink-panel);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: row; /* Split horizontally across entire viewport */
+  align-items: stretch;
+  padding: 0;
+  margin: 0;
 }
 
 .login-left {
   flex: 1;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  padding-top: 64px;
   background: var(--ink);
   border-right: 1px solid var(--accent-fill);
+  padding: 40px;
+  box-sizing: border-box;
 }
 
 .login-right {
   flex: 1;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  padding-top: 64px;
   background: var(--ink-panel);
+  padding: 40px;
+  box-sizing: border-box;
 }
 
 .login-form {
-  width: 90%;
-  max-width: 380px;
+  width: 100%;
+  max-width: 360px;
   display: flex;
   flex-direction: column;
-}
-
-.login-form h1 {
-  font-family: 'Fraunces', serif;
-  font-weight: 600;
-  font-size: 26px;
-  color: var(--yellow-pale);
-  margin: 0 0 30px;
 }
 
 .links {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
   width: 100%;
   font-family: 'JetBrains Mono', monospace;
   font-size: 10.5px;
   color: var(--yellow);
   text-transform: uppercase;
   letter-spacing: 1.2px;
-  margin-top: 16px;
-}
-
-.nav-link,
-.nav-link:visited {
-  color: inherit;
-  text-decoration: underline;
-  white-space: nowrap;
+  margin-top: 20px;
 }
