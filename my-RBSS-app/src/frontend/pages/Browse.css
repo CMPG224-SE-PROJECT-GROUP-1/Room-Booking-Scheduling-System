@@ -21,19 +21,6 @@
   box-sizing: border-box;
 }
 
-.browse-title {
-  margin: 0 0 6px;
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--accent-fill-text, #ffffff);
-}
-
-.browse-subtitle {
-  margin: 0;
-  font-size: 14px;
-  color: var(--text-secondary);
-}
-
 /* Split container holding left and right panels */
 .browse-split-container {
   flex: 1;

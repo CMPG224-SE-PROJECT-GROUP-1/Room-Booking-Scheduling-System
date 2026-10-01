@@ -11,6 +11,8 @@ import AppLayout from "./frontend/components/AppLayout";
 import BannerLayout from "./frontend/components/BannerLayout";
 import VerifySignup from "./frontend/pages/VerifySignup";
 import Browse from "./frontend/pages/Browse";
+import BookingPage from "./frontend/pages/BookingPage";
+import ConfirmationPage from "./frontend/pages/ConfirmationPage";
 
 
 function App() {
@@ -26,6 +28,8 @@ function App() {
 
                   <Route path="/dashboard" element={<Dashboard/>} />
                   <Route path="/browse" element={<Browse/>} />
+                  <Route path="/booking" element={<BookingPage/>} />
+                  <Route path="/confirmation" element={<ConfirmationPage/>} />
 
                 </Route>
 
