@@ -26,7 +26,7 @@ export class BookingManager {
 
     const { data, error } = await supabase
       .from('bookings')
-      .select('*, rooms(room_number, building)')
+      .select('*, rooms!bookings_room_fk(room_number, building_name)')
       .eq('user_id', userId)
       .order('start_time', { ascending: false });
 
@@ -65,7 +65,7 @@ export class BookingManager {
     let query = supabase.from('rooms').select('*').eq('availability', true);
 
     if (building && building !== 'Any building') {
-      query = query.eq('building', building);
+      query = query.eq('building_name', building);
     }
     if (minCapacity) {
       query = query.gte('capacity', minCapacity);

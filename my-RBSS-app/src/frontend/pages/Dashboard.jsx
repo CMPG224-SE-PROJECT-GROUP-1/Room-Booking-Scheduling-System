@@ -89,7 +89,7 @@ export function Dashboard() {
 
     try {
       setCancellingId(bookingId);
-      await cancelBooking.cancelBooking(bookingId);
+      await bookingManager.cancelBooking(bookingId);
       await loadDashboard();
     } catch (err) {
       console.error("Cancel failed:", err);
