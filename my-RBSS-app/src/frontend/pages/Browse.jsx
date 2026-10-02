@@ -4,10 +4,11 @@ import Card from '../components/Card';
 import Button from '../components/Button';
 import FilterSelect from '../components/FilterSelect';
 import TextCard from '../components/TextCard';
-import {BookingManager} from '../../backend/BookingManager'; 
+import { bookingManager } from '../../backend/BookingManager';
+import { TIMES, SLOT_HOURS, addHours, formatDisplayDate } from "../../frontend/utils/slots";
+
 import { useNavigate } from 'react-router-dom';
 
-const TIMES = ['09:00', '11:00', '15:00', '17:00', '19:00'];
 const BUILDING_OPTIONS = ['Any building', 'Library', 'Humanities', 'Science Block', 'Commerce'];
 const TIME_OPTIONS = ['Any time', ...TIMES];
 const AMENITY_OPTIONS = [
@@ -19,9 +20,11 @@ const AMENITY_OPTIONS = [
   'Video conferencing',
   'Stage/podium',
 ];
+const FALLBACK_IMAGE =
+  'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80';
 
 // Helper to get real dates
-function getUpcomingDays(count = 4) {
+function getUpcomingDays(count = 5) {
   const dayNames = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
   const today = new Date();
   const list = [];
@@ -44,17 +47,15 @@ function getUpcomingDays(count = 4) {
 
 export default function Browse() {
   const navigate = useNavigate();
-  const bookingManager = useMemo(() => new BookingManager(), []);
 
-  // Generate 4 dynamic upcoming calendar days
   const upcomingDays = useMemo(() => getUpcomingDays(4), []);
   const defaultDate = upcomingDays[0].dateStr;
 
   const [rooms, setRooms] = useState([]);
-  const [activeBookings, setActiveBookings] = useState([]);
+  const [busySlots, setBusySlots] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState(null);
 
-  // Filters state
   const [filters, setFilters] = useState({
     building: 'Any building',
     time: '09:00',
@@ -69,34 +70,39 @@ export default function Browse() {
   const [roomIndex, setRoomIndex] = useState(0);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
 
-  // Fetch real rooms & active bookings from Supabase
+  // Fetch real rooms & busy slots from Supabase
   useEffect(() => {
     async function init() {
       try {
         setLoading(true);
-        await bookingManager.ready;
+        setErrorMsg(null);
 
-        const fetchedRooms = await bookingManager.searchRooms({
-          building: filters.building !== 'Any building' ? filters.building : undefined,
-        });
+        const [fetchedRooms, slots] = await Promise.all([
+          bookingManager.searchRooms({
+            building: filters.building !== 'Any building' ? filters.building : undefined,
+          }),
+          bookingManager.fetchBusySlots(),
+        ]);
 
         setRooms(fetchedRooms);
-        setActiveBookings(bookingManager.getBookings);
+        setBusySlots(slots);
       } catch (err) {
         console.error('Failed to load data:', err);
+        setErrorMsg('Could not load rooms. Please refresh the page.');
       } finally {
         setLoading(false);
       }
     }
     init();
-  }, [bookingManager, filters.building]);
+  }, [filters.building]);
 
-  // Check if a room is occupied during a specific date and time slot
   const isRoomFree = (roomId, dateStr, timeStr) => {
     const slotStart = new Date(`${dateStr}T${timeStr}:00`);
-    const slotEnd = new Date(slotStart.getTime() + 60 * 60 * 1000);
+    const slotEnd = new Date(slotStart.getTime() + SLOT_HOURS * 60 * 60 * 1000);
 
-    const hasConflict = activeBookings.some((b) => {
+    if (slotStart < new Date()) return false;
+
+    const hasConflict = busySlots.some((b) => {
       if (b.room_id !== roomId) return false;
       const bStart = new Date(b.start_time);
       const bEnd = new Date(b.end_time);
@@ -106,21 +112,19 @@ export default function Browse() {
     return !hasConflict;
   };
 
-  // 1. Filter rooms by amenity array
   const filteredRooms = useMemo(() => {
     return rooms.filter((room) => {
-      if (!room.availability) return false; // Ignore blocked maintenance rooms (like 102)[cite: 3]
+      if (!room.availability) return false; // Ignore blocked maintenance rooms
       if (filters.amenity === 'Any amenity') return true;
       return Array.isArray(room.amenities) && room.amenities.includes(filters.amenity);
     });
   }, [rooms, filters.amenity]);
 
-  // 2. Filter down to rooms free at current slot
   const availableRoomsAtSlot = useMemo(() => {
     return filteredRooms.filter((room) =>
       isRoomFree(room.room_id, selectedSlot.dateStr, selectedSlot.time)
     );
-  }, [filteredRooms, selectedSlot, activeBookings]);
+  }, [filteredRooms, selectedSlot, busySlots]);
 
   const currentRoom = availableRoomsAtSlot[roomIndex] || null;
 
@@ -151,17 +155,32 @@ export default function Browse() {
     setRoomIndex((prev) => (prev < availableRoomsAtSlot.length - 1 ? prev + 1 : 0));
   };
 
-  if (loading) {
+  const handleBookNow = () => {
+    alert("Going to book") // DEBUG
+    navigate('/booking', {
+      state: {
+        room: currentRoom,
+        slot: {
+          date: selectedSlot.dateStr,
+          displayDate: formatDisplayDate(selectedSlot.dateStr),
+          startTime: selectedSlot.time,
+          endTime: addHours(selectedSlot.time, SLOT_HOURS),
+        },
+      },
+    });
+  };
+
+  // only blank the page on the very first load
+  if (loading && rooms.length === 0) {
     return (
       <div className="page-wrapper">
-        <div className="browse-header"><p>Connecting to database...</p></div>
+        <div className="browse-header"><p>Loading rooms...</p></div>
       </div>
     );
   }
 
-  // Active day display helper
   const activeDayObj = upcomingDays.find((d) => d.dateStr === selectedSlot.dateStr) || upcomingDays[0];
-  const formattedAmenities = Array.isArray(currentRoom?.amenities)
+  const formattedAmenities = Array.isArray(currentRoom?.amenities) && currentRoom.amenities.length > 0
     ? currentRoom.amenities.join(', ')
     : 'None listed';
 
@@ -175,7 +194,7 @@ export default function Browse() {
               tag="Room search and book"
               title="Select Your Room."
               metaLeft="Filter and take your time"
-              metaRight="OCT 24, 2026"
+              metaRight={formatDisplayDate(defaultDate)}
             >
               <p>Filter by building, time, and amenities to view availability.</p>
             </TextCard>
@@ -218,6 +237,8 @@ export default function Browse() {
             <section className="browse-right">
               <div className="results">
 
+                {errorMsg && <div className="form-error-banner">{errorMsg}</div>}
+
                 <div className="slot-browser-bar">
                   <div className="active-slot-pill">
                     Viewing: <b>{activeDayObj.label} @ {selectedSlot.time}</b>
@@ -245,10 +266,7 @@ export default function Browse() {
                     <>
                       <Card className="picture-card">
                         <img
-                          src={
-                            currentRoom.image ||
-                            'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80'
-                          }
+                          src={currentRoom.image || FALLBACK_IMAGE}
                           alt={`Room ${currentRoom.room_number}`}
                           className="room-image expandable-pic"
                           onClick={() => setIsViewerOpen(true)}
@@ -265,22 +283,7 @@ export default function Browse() {
                             <b>Status:</b> <span className="status-open">Open at {selectedSlot.time}</span>
                           </div>
                         </dl>
-                        <Button
-                          variant="solid"
-                          onClick={() =>
-                            navigate('/booking', {
-                              state: {
-                                room: currentRoom,
-                                slot: {
-                                  date: selectedSlot.dateStr,
-                                  time: selectedSlot.time,
-                                  start: `${selectedSlot.dateStr}T${selectedSlot.time}:00`,
-                                  end: `${selectedSlot.dateStr}T${selectedSlot.time}:00`,
-                                },
-                              },
-                            })
-                          }
-                        >
+                        <Button variant="solid" onClick={handleBookNow}>
                           Book now
                         </Button>
                       </Card>
@@ -312,6 +315,7 @@ export default function Browse() {
                         {TIMES.map((time) => {
                           const isSelected =
                             selectedSlot.dateStr === d.dateStr && selectedSlot.time === time;
+                          const isPast = new Date(`${d.dateStr}T${time}:00`) < new Date();
 
                           // Count available rooms
                           const freeCount = filteredRooms.filter((r) =>
@@ -324,7 +328,9 @@ export default function Browse() {
                               className={`schedule-slot-cell ${isSelected ? 'cell-selected' : ''}`}
                               onClick={() => handleSelectSlot(d.dateStr, time)}
                             >
-                              {freeCount === 0 ? (
+                              {isPast ? (
+                                <span className="slot-booked">Past</span>
+                              ) : freeCount === 0 ? (
                                 <span className="slot-booked">Booked</span>
                               ) : (
                                 <span className="slot-free">{freeCount} Free</span>
@@ -346,10 +352,7 @@ export default function Browse() {
       {isViewerOpen && currentRoom && (
         <div className="picture-viewer-modal" onClick={() => setIsViewerOpen(false)}>
           <img
-            src={
-              currentRoom.image ||
-              'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80'
-            }
+            src={currentRoom.image || FALLBACK_IMAGE}
             alt={`Room ${currentRoom.room_number}`}
             className="expanded-image"
           />

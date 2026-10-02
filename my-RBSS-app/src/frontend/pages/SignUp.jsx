@@ -24,6 +24,15 @@ export default function SignUp() {
         const cleanUni = uniNumber.trim();
         const email = authService.formatStudentEmail(cleanUni);
 
+        if (!name.trim()) {
+            setErrorMsg("Please enter your name and surname.");
+            return;
+        }
+        if (!/^[STP]\d{6}$/i.test(cleanUni)) {
+            setErrorMsg("University number must start with S, T or P followed by 6 digits, e.g. S123456.");
+            return;
+        }
+
         setLoading(true);
         try {
             await authService.newSignUp(name, cleanUni, password);
