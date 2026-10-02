@@ -1,7 +1,7 @@
 import Card from "../components/Card";
 import Button from "../components/Button";
 import { useState, useMemo, useEffect } from "react";
-import { BookingManager } from "../../backend/BookingManager";
+import { bookingManager } from "../../backend/BookingManager";
 import { supabase } from "../../supabaseClient";
 
 import './MyBookings.css'
@@ -46,12 +46,12 @@ export default function MyBookings(){
             }
       
             // Available rooms tally
-            const rooms = await BookingManager.searchRooms({});
+            const rooms = await bookingManager.searchRooms({});
             const activeRooms = (rooms || []).filter((r) => r.availability === true);
             setAvailableCount(activeRooms.length);
       
             // Bookings classification
-            const bookings = await BookingManager.fetchBookings();
+            const bookings = await bookingManager.fetchBookings();
             const now = new Date();
       
             const active = [];
@@ -88,7 +88,7 @@ export default function MyBookings(){
     
         try {
           setCancellingId(bookingId);
-          await BookingManager.cancelBooking(bookingId);
+          await bookingManager.cancelBooking(bookingId);
           await loadDashboard();
         } catch (err) {
           console.error("Cancel failed:", err);
