@@ -178,6 +178,17 @@ export class User {
         );
         return () => subscription?.unsubscribe();
     }
+
+    async sendRecoveryOtp(uniNumber){
+        const email = this.formatStudentEmail(uniNumber);
+        if (!email) throw new Error("University number required");
+
+        const {error} = await supabase.auth.resetPasswordForEmail(email);
+        if (error) throw error;
+        return email;
+    }
+
+
 }
 
 export const authService = new User();
