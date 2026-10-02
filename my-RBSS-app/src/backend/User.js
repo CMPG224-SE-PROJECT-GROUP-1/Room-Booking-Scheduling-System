@@ -188,6 +188,52 @@ export class User {
         return email;
     }
 
+    async resetPasswordWithOTP(uniNumber, token, newPassword){
+        const email = this.formatStudentEmail(uniNumber);
+        const cleanToken = String(token ?? '').trim();
+
+        if (!email) throw new Error("University number is required.");
+        if (cleanToken.length < 6) throw new Error("Please enter the complete 6-digit code.");
+        if (!newPassword || newPassword.length < 8) throw new Error("Password must be at least 8 characters.");
+
+        const {error} = await supabase.auth.verifyOtp({
+            email: email,
+            token: cleanToken,
+            type: 'recovery'
+        });
+
+        if (error) throw error;
+
+        const {error: updateErr} = await supabase.auth.updateUser({password: newPassword})
+
+        if (updateErr) throw updateErr;
+
+        await supabase.auth.signOut();
+
+    }
+
+    async resendSignUpOTP(email){
+        const {error} = await supabase.auth.resend({
+            type: 'signup',
+            email: email?.trim().toLowerCase()
+        })
+
+        if (error) throw error;
+    }
+
+    async getCurrentProfile(){
+        const user = this.getCurrentUser();
+        if (!user) return null;
+
+        const {data, error} = await supabase
+            .from('profiles')
+            .select("*")
+            .eq('user_id', user_id)
+            .single();
+        
+        if (error) return null;
+        return data;
+    }
 
 }
 
