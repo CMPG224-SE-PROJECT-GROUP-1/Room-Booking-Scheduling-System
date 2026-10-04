@@ -100,61 +100,117 @@ export default function MyBookings(){
 
 
     return (
-         <section className="dashboard-section">
-        <h3 className="section-title">Active Reservations</h3>
+      <div className="app-frame">
 
-        {loading ? (
-            <div className="dashboard-state-text">Loading reservations...</div>
-        ) : activeBookings.length === 0 ? (
-            <Card className="empty-state-card">
-            <p>You have no active reservations right now.</p>
-            </Card>
-        ) : (
-            <div className="bookings-list">
-            {activeBookings.map((b) => (
-                <Card key={b.booking_id} className="booking-card">
-                <div className="booking-details">
-                    <div className="booking-room">
-                    {b.rooms?.building || "Building"} • Room{" "}
-                    {b.rooms?.room_number || b.room_id}
-                    </div>
-                    <div className="booking-time">
-                    {new Date(b.start_time).toLocaleDateString([], {
-                        month: "short",
-                        day: "numeric",
-                    })}{" "}
-                    •{" "}
-                    {new Date(b.start_time).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                    })}{" "}
-                    –{" "}
-                    {new Date(b.end_time).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                    })}
-                    </div>
-                    <div className="booking-meta">
-                    Purpose: <span>{b.room_use}</span>
-                    </div>
-                </div>
+        <main className="home-main">
+          <section className="dashboard-section">
+            <h3 className="section-title">Active Reservations</h3>
 
-                <div className="booking-actions">
-                    <div className="code-chip">
-                    Code: <b>{b.check_in_code}</b>
-                    </div>
-                    <Button
-                    variant="outline"
-                    disabled={cancellingId === b.booking_id}
-                    onClick={() => handleCancel(b.booking_id)}
-                    >
-                    {cancellingId === b.booking_id ? "Cancelling..." : "Cancel"}
-                    </Button>
-                </div>
+            {loading ? (
+                <div className="dashboard-state-text">Loading reservations...</div>
+            ) : activeBookings.length === 0 ? (
+                <Card className="empty-state-card">
+                <p>You have no active reservations right now.</p>
                 </Card>
-            ))}
-            </div>
-        )}
-    </section>
-    )
+            ) : (
+                <div className="bookings-list">
+                {activeBookings.map((b) => (
+                    <Card key={b.booking_id} className="booking-card">
+                    <div className="booking-details">
+                        <div className="booking-room">
+                        {b.rooms?.building || "Building"} • Room{" "}
+                        {b.rooms?.room_number || b.room_id}
+                        </div>
+                        <div className="booking-time">
+                        {new Date(b.start_time).toLocaleDateString([], {
+                            month: "short",
+                            day: "numeric",
+                        })}{" "}
+                        •{" "}
+                        {new Date(b.start_time).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                        })}{" "}
+                        –{" "}
+                        {new Date(b.end_time).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                        })}
+                        </div>
+                        <div className="booking-meta">
+                        Purpose: <span>{b.room_use}</span>
+                        </div>
+                    </div>
+
+                    <div className="booking-actions">
+                        <div className="code-chip">
+                        Code: <b>{b.check_in_code}</b>
+                        </div>
+                        <Button
+                        variant="outline"
+                        disabled={cancellingId === b.booking_id}
+                        onClick={() => handleCancel(b.booking_id)}
+                        >
+                        {cancellingId === b.booking_id ? "Cancelling..." : "Cancel"}
+                        </Button>
+                    </div>
+                    </Card>
+                ))}
+                </div>
+            )}
+      </section>
+
+
+        {pastBookings.length > 0 && (
+                    <section className="dashboard-section">
+                      <h3 className="section-title">History & Past Bookings</h3>
+                      <div className="bookings-list">
+                        {pastBookings.map((b) => (
+                          <Card key={b.booking_id} className="booking-card past-booking">
+                            <div className="booking-details">
+                              <div className="booking-room">
+                                {b.rooms?.building || "Building"} • Room{" "}
+                                {b.rooms?.room_number || b.room_id}
+                              </div>
+                              <div className="booking-time">
+                                {new Date(b.start_time).toLocaleDateString([], {
+                                  month: "short",
+                                  day: "numeric",
+                                })}{" "}
+                                •{" "}
+                                {new Date(b.start_time).toLocaleTimeString([], {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })}{" "}
+                                –{" "}
+                                {new Date(b.end_time).toLocaleTimeString([], {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })}
+                              </div>
+                            </div>
+        
+                            <div>
+                              <span
+                                className={`status-badge ${
+                                  b.status === false ? "status-cancelled" : "status-completed"
+                                }`}
+                              >
+                                {b.status === false ? "Cancelled" : "Completed"}
+                              </span>
+                            </div>
+                          </Card>
+                        ))}
+                      </div>
+                    </section>
+                  )}
+
+
+
+        </main>
+
+      </div>
+    
+    ) // return end
 }
+

@@ -15,6 +15,28 @@ export default function VerifySignup() {
     const [errorMsg, setErrorMsg] = useState(null);
     const [loading, setLoading] = useState(false);
 
+    const [resendMsg, setResendMsg] = useState(null);
+    const [cooldown, setCooldown] = useState(0);
+
+    useEffect(() => {
+        if (cooldown <= 0) return;
+        const timer = setTimeout(() => setCooldown((c) => c - 1), 1000);
+        return () => clearTimeout(timer);
+    }, [cooldown]);
+
+    const onResend = async () => {
+        setErrorMsg(null);
+        setResendMsg(null);
+        try {
+            await authService.resendSignUpOtp(email);
+            setResendMsg("A new code has been sent.");
+            setCooldown(60);
+        } catch (err) {
+            setErrorMsg(err.message || "Could not resend the code.");
+        }
+    };
+
+
     useEffect(() => {
         if (!email) {
             navigate("/signup", { replace: true });
@@ -68,6 +90,13 @@ export default function VerifySignup() {
                     <Button type="submit" disabled={loading}>
                         {loading ? "Verifying..." : "Confirm & Sign In"}
                     </Button>
+
+                    {resendMsg && <p style={{ color: "green", fontSize: "0.9rem" }}>{resendMsg}</p>}
+
+                    <Button type="button" variant="outline" disabled={cooldown > 0} onClick={onResend}>
+                        {cooldown > 0 ? `Resend code in ${cooldown}s` : "Resend code"}
+                    </Button>
+
                 </form>
             </main>
         </div>
