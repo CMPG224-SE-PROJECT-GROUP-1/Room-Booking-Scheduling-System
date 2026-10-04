@@ -1,6 +1,7 @@
 import { useSidebar } from '../Sidebar/SidebarContext';
 import './Sidebar.css';
 import { Link } from 'react-router-dom';
+import { authService } from '../../backend/User';
 
 const navItems = ['Dashboard', 'Browse Rooms', 'My Bookings', 'Log Out'];
 
@@ -22,6 +23,12 @@ export default function Sidebar() {
         <li>
             <Link to={`/`} className='nav-link'>Logout</Link>
         </li>
+
+        {authService.getRole === "admin" && 
+          <li>
+            <Link to={`/admin`} className='nav-link'>Admin</Link>
+        </li>
+        }
       </ul>
     </div>
   );
