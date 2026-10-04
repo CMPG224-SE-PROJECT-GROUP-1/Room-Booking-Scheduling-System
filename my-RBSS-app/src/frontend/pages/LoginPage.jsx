@@ -4,6 +4,7 @@ import Button from "../components/Button";
 import './LoginPage.css';
 import { Link, useNavigate } from "react-router-dom";
 import { authService } from '../../backend/User.js';
+import { supabase } from "../../supabaseClient.js";
 
 export function LoginPage() {
     const [uniNumber, setUniNumber] = useState('');
@@ -33,9 +34,12 @@ export function LoginPage() {
         try {
             const data = await authService.authenticate(cleanUniNumber, password);
 
-            if (data.session) {
+            if (authService.getRole === 'admin') {
+                navigate('/admin');
+            } else {
                 navigate('/dashboard');
             }
+            
         } catch (err) {
             setErrorMsg(err.message || "Failed to sign in.");
         } finally {

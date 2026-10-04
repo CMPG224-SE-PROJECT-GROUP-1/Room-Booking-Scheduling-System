@@ -14,6 +14,7 @@ import Browse from "./frontend/pages/Browse";
 import BookingPage from "./frontend/pages/BookingPage";
 import ConfirmationPage from "./frontend/pages/ConfirmationPage";
 import MyBookings from "./frontend/pages/MyBookings";
+import AdminPage from "./frontend/pages/AdminPage";
 import ProtectedRoutes from "./frontend/components/ProtectedRoutes";
 
 
@@ -34,6 +35,7 @@ function App() {
                       <Route path="/booking" element={<BookingPage/>} />
                       <Route path="/confirmation" element={<ConfirmationPage/>} />
                       <Route path="/mybookings" element={<MyBookings/>} />
+                      <Route path="/admin" element={<AdminPage/>} />
 
                   </Route>
               </Route>
