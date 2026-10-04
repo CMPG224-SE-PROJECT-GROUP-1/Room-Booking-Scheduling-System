@@ -35,8 +35,17 @@ export default function SignUp() {
 
         setLoading(true);
         try {
-            await authService.newSignUp(name, cleanUni, password);
-            navigate('/verifyotp', { state: { email } });
+
+            const result = await authService.newSignUp(name, cleanUni, password);
+
+            if (result.session) {
+                // confirm email is OFF: 
+                navigate('/dashboard', { replace: true });
+            } else {
+                // confirm email is ON:
+                navigate('/verifyotp', { state: { email } });
+            }
+
         } catch (err) {
             setErrorMsg(err.message || "Failed to sign up.");
         } finally {

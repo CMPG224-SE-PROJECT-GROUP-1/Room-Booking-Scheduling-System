@@ -7,7 +7,7 @@ export class AdminUser extends User{
     
     constructor(fullName, studentNumber, email, password){
         super(fullName, studentNumber, email, password)
-        this.#permissions = [ "MANAGE_USERS", "BLOCK_ROOM"]
+        this.#permissions = [ "MANAGE_USERS", "BLOCK_ROOM", "CHECK_IN"]
     }
 
     hasPermission(action){
@@ -38,6 +38,14 @@ export class AdminUser extends User{
 
         if (error) throw new Error(error.message || "Error listing users.")
         
+        return data || [];
+    }
+
+    async listRooms(){
+        const {data, error} = await supabase
+            .from('rooms').select('*').order('room_number')
+
+        if (error) throw new Error(error.message);
         return data || [];
     }
 
@@ -88,7 +96,7 @@ export class AdminUser extends User{
 
         const {data, error} = await supabase
             .from('bookings')
-            .select('*, rooms(room_number, building), profiles(full_name, student_number)')
+            .select('*, rooms(room_number, building_name), profiles(full_name, student_number)')
             .eq('status', true)
             .gte('end_time', startOfToday.toISOString())
             .order('start_time')
