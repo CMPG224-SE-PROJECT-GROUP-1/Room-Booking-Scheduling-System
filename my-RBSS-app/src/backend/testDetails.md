@@ -8,6 +8,11 @@ Name: Naledi Radebe
 University Num: S0000002
 Password: #Test02email
 
+### Test User 3:
+Name: Terrific Tester
+University Num: S0000003
+Password: #Test03email
+
 ### Test Admin 1:
 Name: Admin Tester
 University Num: S000001

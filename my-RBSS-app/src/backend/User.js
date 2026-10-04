@@ -1,8 +1,8 @@
 import { supabase } from '../supabaseClient';
 
 
-const USE_TEST_EMAIL = true;
-const TEST_EMAIL_NAME = 'neomasebe9'; // change this for test purposes
+const USE_TEST_EMAIL = true; // change when CONFIRM EMAIL OFF
+const TEST_EMAIL_NAME = 'holyzintho'; // change this for test purposes
 const TEST_EMAIL_DOMAIN = 'gmail.com';
 const SCHOOL_EMAIL_DOMAIN = 'university.ac.za';
 
