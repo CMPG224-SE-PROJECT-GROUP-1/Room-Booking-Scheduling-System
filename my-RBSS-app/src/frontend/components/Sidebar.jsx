@@ -17,7 +17,7 @@ export default function Sidebar() {
             <Link to={`/browse`} className='nav-link'>Browse Rooms</Link>
         </li>
         <li>
-            <Link to={`/bookings`} className='nav-link'>My Bookings</Link>
+            <Link to={`/mybookings`} className='nav-link'>My Bookings</Link>
         </li>
         <li>
             <Link to={`/`} className='nav-link'>Logout</Link>
