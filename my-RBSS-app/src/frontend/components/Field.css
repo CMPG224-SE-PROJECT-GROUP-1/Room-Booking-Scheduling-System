@@ -50,3 +50,10 @@
 }
 
 .field.focused .underline-fill { width: 100%; }
+
+.field-hint {
+  margin-top: 8px;
+  min-height: 16px; /* reserves space so layout doesn't jump */
+  display: flex;
+  align-items: center;
+}

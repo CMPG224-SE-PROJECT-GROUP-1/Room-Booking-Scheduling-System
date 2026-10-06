@@ -23,6 +23,7 @@ export default function Field({id, label, type = 'text', placeholder, value, onC
                 <div className="underline-fill"/>
 
             </div>
+        {hint !== undefined && <div className="field-hint">{hint}</div>}
 
         </div>
     )
