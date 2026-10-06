@@ -28,6 +28,7 @@ export default function SignUp() {
             setErrorMsg("Please enter your name and surname.");
             return;
         }
+        // S, T or P followed by 6 digits.
         if (!/^[STP]\d{6}$/i.test(cleanUni)) {
             setErrorMsg("University number must start with S, T or P followed by 6 digits, e.g. S123456.");
             return;
@@ -35,17 +36,15 @@ export default function SignUp() {
 
         setLoading(true);
         try {
-
             const result = await authService.newSignUp(name, cleanUni, password);
 
             if (result.session) {
-                // confirm email is OFF: 
+                // "Confirm email" is OFF in Supabase: they are already logged in
                 navigate('/dashboard', { replace: true });
             } else {
-                // confirm email is ON:
+                // "Confirm email" is ON: they still need to enter the code
                 navigate('/verifyotp', { state: { email } });
             }
-
         } catch (err) {
             setErrorMsg(err.message || "Failed to sign up.");
         } finally {
@@ -54,16 +53,16 @@ export default function SignUp() {
     };
 
     return (
-        <div className="page-wrapper"> {}
-            <div className="signup-page"> {}
-                <section className="signup-left"> {}
-                    <form className="signup-form" onSubmit={onSignUp}> {}
-                        <h1>Create your account</h1> {}
+        <div className="page-wrapper">
+            <div className="signup-page">
+                <section className="signup-left">
+                    <form className="signup-form" onSubmit={onSignUp}>
+                        <h1>Create your account</h1>
                         <p className="sub">Takes about a minute -- use your University Number</p>
 
                         {errorMsg && (
-                            <p className="error-text" style={{ color: "red", fontSize: "0.9rem" }}> {}
-                                {errorMsg} {}
+                            <p className="error-text" style={{ color: "red", fontSize: "0.9rem" }}>
+                                {errorMsg}
                             </p>
                         )}
 
@@ -95,18 +94,18 @@ export default function SignUp() {
                             passwordValue={password}
                         />
 
-                        <Button 
-                            active={passMatch && !loading} 
-                            disabled={!passMatch || loading} 
+                        <Button
+                            active={passMatch && !loading}
+                            disabled={!passMatch || loading}
                             type="submit"
                         >
-                            {loading ? "Creating Account..." : "Create Account"} {}
+                            {loading ? "Creating Account..." : "Create Account"}
                         </Button>
                     </form>
                 </section>
 
-                <section className="signup-right"> {}
-                    <h1>HI</h1> {}
+                <section className="signup-right">
+                    <h1>HI</h1>
                 </section>
             </div>
         </div>

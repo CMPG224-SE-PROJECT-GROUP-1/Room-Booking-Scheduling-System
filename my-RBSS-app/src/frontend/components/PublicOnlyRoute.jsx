@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { authService } from "../../backend/User";
 
-// Layout route: logged in -> show the child routes, otherwise go to the login page ("/")
-export default function ProtectedRoutes() {
+// Login and sign-up pages: if you are already logged in, go to the dashboard.
+export default function PublicOnlyRoute() {
     const [checking, setChecking] = useState(true);
     const [session, setSession] = useState(null);
 
@@ -12,14 +12,10 @@ export default function ProtectedRoutes() {
             setSession(s);
             setChecking(false);
         });
-
-
-        const unsubscribe = authService.onAuthStateChange((s) => setSession(s));
-        return unsubscribe;
     }, []);
 
     if (checking) return <p>Loading...</p>;
-    if (!session) return <Navigate to="/" replace />;
+    if (session) return <Navigate to="/dashboard" replace />;
 
     return <Outlet />;
 }
