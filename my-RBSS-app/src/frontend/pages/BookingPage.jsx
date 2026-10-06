@@ -5,6 +5,7 @@ import Button from '../components/Button';
 import PhotoCard from '../components/PhotoCard';
 import TextCard from '../components/TextCard';
 import FilterSelect from '../components/FilterSelect';
+import { CHECK_IN_GRACE_MINUTES } from '../../backend/slots';
 import './BookingPage.css';
 
 export default function BookingPage() {
@@ -82,7 +83,6 @@ export default function BookingPage() {
           </header>
 
           <div className="booking-split-container">
-            {/* Left Column: Interactive Form */}
             <section className="booking-left">
               <form className="booking-form" onSubmit={handleContinue}>
                 <div className="readonly-row">
@@ -174,7 +174,7 @@ export default function BookingPage() {
               <div className="bottom-rules">
                 <TextCard tag="Guidelines" title="Room Usage Rules">
                   <ul className="rules-list">
-                    <li>1. Check-in is required using your 4-digit code within 15 minutes of start time.</li>
+                    <li>1. Check-in is required using your 4-digit code within {CHECK_IN_GRACE_MINUTES} minutes of start time.</li>
                     <li>2. Maintain acceptable noise levels appropriate to the building zone.</li>
                     <li>3. Return whiteboard markers, HDMI cords, and accessories before departure.</li>
                     <li>4. No food or open drink containers allowed near technical workstations.</li>

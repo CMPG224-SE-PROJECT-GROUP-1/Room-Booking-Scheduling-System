@@ -1,12 +1,11 @@
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Field from "../components/Field";
+import Button from "../components/Button";
 import './VerifySignup.css';
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import Field from '../components/Field';
-import Button from '../components/Button';
-import {authService} from '../../backend/User.js';
+import { authService } from "../../backend/User";
 
 export default function RecoverPassword(){
-
     const navigate = useNavigate();
 
     const [step, setStep] = useState('request');
@@ -23,13 +22,12 @@ export default function RecoverPassword(){
         setErrorMsg(null);
         setInfoMsg(null);
 
-        if (!uniNumber.trim()){
+        if (!uniNumber.trim()) {
             setErrorMsg("Please enter your university number.");
             return;
         }
 
         setLoading(true);
-
         try {
             await authService.sendRecoveryOtp(uniNumber.trim());
             setInfoMsg("If that account exists, a 6-digit code has been sent to its email.");
@@ -39,7 +37,6 @@ export default function RecoverPassword(){
         } finally {
             setLoading(false);
         }
-
     };
 
     const onReset = async (e) => {
@@ -54,14 +51,13 @@ export default function RecoverPassword(){
         setLoading(true);
         try {
             await authService.resetPasswordWithOtp(uniNumber.trim(), otp, password);
-            navigate("/login", { replace: true });
+            navigate("/", { replace: true });
         } catch (err) {
             setErrorMsg(err.message || "Invalid or expired code. Please try again.");
         } finally {
             setLoading(false);
         }
-
-    }
+    };
 
     return (
         <div className="page-wrapper">
@@ -88,7 +84,7 @@ export default function RecoverPassword(){
                         </Button>
 
                         <div className="links">
-                            <Link to="/login" className="nav-link">Back to sign in</Link>
+                            <Link to="/" className="nav-link">Back to sign in</Link>
                         </div>
                     </form>
                 ) : (

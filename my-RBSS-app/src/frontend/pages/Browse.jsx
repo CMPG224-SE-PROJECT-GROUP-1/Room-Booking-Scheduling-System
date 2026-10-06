@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Browse.css';
 import Card from '../components/Card';
 import Button from '../components/Button';
 import FilterSelect from '../components/FilterSelect';
 import TextCard from '../components/TextCard';
+import SlowLoadBanner from '../components/SlowLoadBanner';
 import { bookingManager } from '../../backend/BookingManager';
-import { TIMES, SLOT_HOURS, addHours, formatDisplayDate } from "../../frontend/utils/slots";
-
-import { useNavigate } from 'react-router-dom';
+import {
+  TIMES, SLOT_HOURS, DAYS_AHEAD, DAYS_PER_PAGE, addHours, formatDisplayDate,
+} from '../../backend/slots';
+import { useSlowLoad } from '../hooks/useSlowLoad';
 
 const BUILDING_OPTIONS = ['Any building', 'Library', 'Humanities', 'Science Block', 'Commerce'];
 const TIME_OPTIONS = ['Any time', ...TIMES];
@@ -20,11 +23,11 @@ const AMENITY_OPTIONS = [
   'Video conferencing',
   'Stage/podium',
 ];
+const CAPACITY_OPTIONS = ['Any size', '2', '4', '6', '8', '10', '12'];
 const FALLBACK_IMAGE =
   'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80';
 
-// Helper to get real dates
-function getUpcomingDays(count = 5) {
+function getUpcomingDays(count) {
   const dayNames = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
   const today = new Date();
   const list = [];
@@ -48,11 +51,13 @@ function getUpcomingDays(count = 5) {
 export default function Browse() {
   const navigate = useNavigate();
 
-  const upcomingDays = useMemo(() => getUpcomingDays(4), []);
-  const defaultDate = upcomingDays[0].dateStr;
+  const allDays = useMemo(() => getUpcomingDays(DAYS_AHEAD), []);
+  const defaultDate = allDays[0].dateStr;
+  const [pageStart, setPageStart] = useState(0);
+  const tableDays = allDays.slice(pageStart, pageStart + DAYS_PER_PAGE);
 
   const [rooms, setRooms] = useState([]);
-  const [busySlots, setBusySlots] = useState([]);
+  const [busySlots, setBusySlots] = useState([]);   
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState(null);
 
@@ -61,6 +66,7 @@ export default function Browse() {
     time: '09:00',
     date: defaultDate,
     amenity: 'Any amenity',
+    minCapacity: 'Any size',
   });
 
   const [selectedSlot, setSelectedSlot] = useState({
@@ -69,6 +75,8 @@ export default function Browse() {
   });
   const [roomIndex, setRoomIndex] = useState(0);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
+
+  const slow = useSlowLoad(loading);
 
   // Fetch real rooms & busy slots from Supabase
   useEffect(() => {
@@ -114,11 +122,12 @@ export default function Browse() {
 
   const filteredRooms = useMemo(() => {
     return rooms.filter((room) => {
-      if (!room.availability) return false; // Ignore blocked maintenance rooms
+      if (!room.availability) return false;
+      if (filters.minCapacity !== 'Any size' && room.capacity < Number(filters.minCapacity)) return false;
       if (filters.amenity === 'Any amenity') return true;
       return Array.isArray(room.amenities) && room.amenities.includes(filters.amenity);
     });
-  }, [rooms, filters.amenity]);
+  }, [rooms, filters.amenity, filters.minCapacity]);
 
   const availableRoomsAtSlot = useMemo(() => {
     return filteredRooms.filter((room) =>
@@ -128,13 +137,14 @@ export default function Browse() {
 
   const currentRoom = availableRoomsAtSlot[roomIndex] || null;
 
-  // Handlers
   const handleFilterChange = (field, val) => {
     setFilters((prev) => ({ ...prev, [field]: val }));
     setRoomIndex(0);
 
     if (field === 'date') {
       setSelectedSlot((prev) => ({ ...prev, dateStr: val }));
+      const idx = allDays.findIndex((d) => d.dateStr === val);
+      if (idx >= 0) setPageStart(Math.floor(idx / DAYS_PER_PAGE) * DAYS_PER_PAGE);
     }
     if (field === 'time' && val !== 'Any time') {
       setSelectedSlot((prev) => ({ ...prev, time: val }));
@@ -156,7 +166,6 @@ export default function Browse() {
   };
 
   const handleBookNow = () => {
-    alert("Going to book") // DEBUG
     navigate('/booking', {
       state: {
         room: currentRoom,
@@ -170,19 +179,22 @@ export default function Browse() {
     });
   };
 
-  // only blank the page on the very first load
   if (loading && rooms.length === 0) {
     return (
       <div className="page-wrapper">
-        <div className="browse-header"><p>Loading rooms...</p></div>
+        <div className="browse-header">
+          <p>Loading rooms...</p>
+          {slow && <SlowLoadBanner />}
+        </div>
       </div>
     );
   }
 
-  const activeDayObj = upcomingDays.find((d) => d.dateStr === selectedSlot.dateStr) || upcomingDays[0];
-  const formattedAmenities = Array.isArray(currentRoom?.amenities) && currentRoom.amenities.length > 0
-    ? currentRoom.amenities.join(', ')
-    : 'None listed';
+  const activeDayObj = allDays.find((d) => d.dateStr === selectedSlot.dateStr) || allDays[0];
+  const formattedAmenities =
+    Array.isArray(currentRoom?.amenities) && currentRoom.amenities.length > 0
+      ? currentRoom.amenities.join(', ')
+      : 'None listed';
 
   return (
     <div className="app-frame">
@@ -196,7 +208,7 @@ export default function Browse() {
               metaLeft="Filter and take your time"
               metaRight={formatDisplayDate(defaultDate)}
             >
-              <p>Filter by building, time, and amenities to view availability.</p>
+              <p>Filter by building, time, capacity and amenities to view availability.</p>
             </TextCard>
           </header>
 
@@ -220,7 +232,7 @@ export default function Browse() {
                   <FilterSelect
                     label="Date"
                     value={filters.date}
-                    options={upcomingDays.map((d) => ({ value: d.dateStr, label: d.label }))}
+                    options={allDays.map((d) => ({ value: d.dateStr, label: d.label }))}
                     onChange={(val) => handleFilterChange('date', val)}
                   />
                   <FilterSelect
@@ -229,14 +241,20 @@ export default function Browse() {
                     options={AMENITY_OPTIONS}
                     onChange={(val) => handleFilterChange('amenity', val)}
                   />
+                  <FilterSelect
+                    label="Minimum capacity"
+                    value={filters.minCapacity}
+                    options={CAPACITY_OPTIONS}
+                    onChange={(val) => handleFilterChange('minCapacity', val)}
+                  />
                 </div>
               </div>
             </section>
 
-            {/* Results + Calendar */}
             <section className="browse-right">
               <div className="results">
 
+                {slow && <SlowLoadBanner />}
                 {errorMsg && <div className="form-error-banner">{errorMsg}</div>}
 
                 <div className="slot-browser-bar">
@@ -260,7 +278,6 @@ export default function Browse() {
                   )}
                 </div>
 
-                {/* Selected Room Cards */}
                 <div className="cards-row">
                   {currentRoom ? (
                     <>
@@ -298,7 +315,26 @@ export default function Browse() {
                   )}
                 </div>
 
-                {/* Schedule Table */}
+                <div className="room-nav-controls">
+                  <button
+                    className="nav-arrow-btn"
+                    disabled={pageStart === 0}
+                    onClick={() => setPageStart((p) => Math.max(0, p - DAYS_PER_PAGE))}
+                  >
+                    ← Earlier
+                  </button>
+                  <span className="room-counter">
+                    {tableDays[0].label} – {tableDays[tableDays.length - 1].label}
+                  </span>
+                  <button
+                    className="nav-arrow-btn"
+                    disabled={pageStart + DAYS_PER_PAGE >= allDays.length}
+                    onClick={() => setPageStart((p) => p + DAYS_PER_PAGE)}
+                  >
+                    Later →
+                  </button>
+                </div>
+
                 <table className="schedule">
                   <thead>
                     <tr>
@@ -309,9 +345,9 @@ export default function Browse() {
                     </tr>
                   </thead>
                   <tbody>
-                    {upcomingDays.map((d) => (
+                    {tableDays.map((d) => (
                       <tr key={d.dateStr}>
-                        <td>{d.dayName}</td>
+                        <td>{d.label}</td>
                         {TIMES.map((time) => {
                           const isSelected =
                             selectedSlot.dateStr === d.dateStr && selectedSlot.time === time;
