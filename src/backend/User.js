@@ -36,15 +36,7 @@ export class User
   #userID = null;        //supabase user ID
   #fullName = '';         
   #studentNumber = '';    
-  #email = '';            
-
-  //Default Constructor
-  constructor() 
-  {
-    this.#fullName = " ";
-    this.#studentNumber = " ";
-    this.#email = " ";
-  }
+  #email = '';           
 
   // Constructor 
   constructor(fullName = '', studentNumber = '', email = '') 
