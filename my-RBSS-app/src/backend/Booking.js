@@ -1,19 +1,19 @@
-import { CHECK_IN_GRACE_MINUTES } from '../frontend/utils/slots.js';
-
+import { CHECK_IN_GRACE_MINUTES } from './slots.js';
 
 export class Booking{
-    #userID         // String (uuid from supabase auth)
-    #bookingID      // 
-    #roomID         // int
+    #userID         // uuid
+    #bookingID      // uuid
+    #roomID         // uuid
     #startTime      // Date
     #endTime        // Date
     #roomUse        // String, reason for using room
+    #attendees      // int, number of people
     #checkInCode    // String
     #status         // boolean, true = active, false = cancelled
     #checkedIn      // boolean, true once the student has been checked in
     #cancelReason   // String
 
-    constructor(bookingID, userID, roomID, startTime, endTime, roomUse, checkInCode, status = false, checkedIn = false){
+    constructor(bookingID, userID, roomID, startTime, endTime, roomUse, checkInCode, status = false, checkedIn = false, attendees = null){
         this.#bookingID = bookingID;
         this.#userID = userID;
         this.#roomID = roomID;
@@ -23,6 +23,7 @@ export class Booking{
         this.#checkInCode = checkInCode;
         this.#status = status;
         this.#checkedIn = checkedIn;
+        this.#attendees = attendees;
         this.#cancelReason = null;
     }
 
@@ -33,6 +34,7 @@ export class Booking{
     get getStartTime() {return this.#startTime;}
     get getEndTime() {return this.#endTime;}
     get getRoomUse() {return this.#roomUse;}
+    get getAttendees() {return this.#attendees;}
     get getCheckInCode() {return this.#checkInCode;}
     get getStatus() {return this.#status;}
     get getCheckedIn() {return this.#checkedIn;}
@@ -59,10 +61,15 @@ export class Booking{
         return true;
     }
 
-    // active booking, nobody checked in, and the grace time after the start has passed
     isExpired(){
         const graceMs = CHECK_IN_GRACE_MINUTES * 60 * 1000;
         return this.#status && !this.#checkedIn && Date.now() > this.#startTime.getTime() + graceMs;
+    }
+
+    updateDetails(roomUse, attendees){
+        if (roomUse !== undefined) this.#roomUse = roomUse;
+        if (attendees !== undefined) this.#attendees = attendees;
+        return true;
     }
 
     toObject(){
@@ -73,6 +80,7 @@ export class Booking{
             start_time: this.#startTime.toISOString(),
             end_time: this.#endTime.toISOString(),
             room_use: this.#roomUse,
+            attendees: this.#attendees,
             check_in_code: this.#checkInCode,
             status: this.#status,
             checked_in: this.#checkedIn,

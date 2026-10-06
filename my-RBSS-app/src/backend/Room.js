@@ -1,10 +1,10 @@
 export class Room{
-    #roomID;        // int
+    #roomID;        // uuid
     #roomNumber;    // String
     #building;      // String
     #capacity;      // int
     #availability;  // boolean
-    #amenities;     // List
+    #amenities;     // List<String>
     #image;         // String (url) or null
 
 
@@ -14,7 +14,7 @@ export class Room{
         this.#building = building;
         this.#capacity = capacity;
         this.#availability = availability;
-        this.#amenities = Array.isArray(amenities) ? amenities : [];  // never null, so .includes() is safe
+        this.#amenities = Array.isArray(amenities) ? amenities : []; 
         this.#image = image;
     }
 

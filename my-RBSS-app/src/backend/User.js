@@ -1,8 +1,9 @@
 import { supabase } from '../supabaseClient';
 
-
-const USE_TEST_EMAIL = true; // change when CONFIRM EMAIL OFF
-const TEST_EMAIL_NAME = 'neomasebe9'; // change this for test purposes
+// While testing everything goes to test gmail.
+// When we go live: set USE_TEST_EMAIL = false and it becomes S123456@university.ac.za
+const USE_TEST_EMAIL = true;
+const TEST_EMAIL_NAME = 'neomasebe9';
 const TEST_EMAIL_DOMAIN = 'gmail.com';
 const SCHOOL_EMAIL_DOMAIN = 'university.ac.za';
 
@@ -33,6 +34,7 @@ export class User {
 
         if (USE_TEST_EMAIL) {
             // neomasebe9+s123456@gmail.com  (every student = different account, same inbox)
+            // return `${TEST_EMAIL_NAME}+${clean}@${TEST_EMAIL_DOMAIN}`;
             return `${TEST_EMAIL_NAME}@${TEST_EMAIL_DOMAIN}`;
         }
         return `${clean}@${SCHOOL_EMAIL_DOMAIN}`;
@@ -91,14 +93,11 @@ export class User {
     }
 
     async newSignUp(name, uniNumber, password) {
-        const cleanUniNumber = uniNumber?.trim() || '';
-        const prefix = cleanUniNumber.charAt(0).toUpperCase();
+        const cleanUniNumber = (uniNumber?.trim() || '').toUpperCase();
 
-        let role = '';
-        if (prefix === 'S') role = 'student';
-        else if (prefix === 'T') role = 'teacher';
-        else if (prefix === 'P') role = 'postgrad';
-        else throw new Error("Invalid university number. Must start with S, T, or P.");
+        if (!/^[STP]\d{6}$/.test(cleanUniNumber)) {
+            throw new Error("University number must start with S, T or P followed by 6 digits, e.g. S123456.");
+        }
 
         const targetEmail = this.formatStudentEmail(cleanUniNumber);
         if (!targetEmail) {
@@ -111,8 +110,7 @@ export class User {
             options: {
                 data: {
                     full_name: name.trim(),
-                    student_number: cleanUniNumber,
-                    role: role
+                    student_number: cleanUniNumber
                 }
             }
         });
@@ -155,9 +153,50 @@ export class User {
         return data;
     }
 
+    async resendSignUpOtp(email) {
+        const { error } = await supabase.auth.resend({
+            type: 'signup',
+            email: email?.trim().toLowerCase()
+        });
+        if (error) throw error;
+    }
+
+    async sendRecoveryOtp(uniNumber) {
+        const email = this.formatStudentEmail(uniNumber);
+        if (!email) throw new Error("University number is required.");
+
+        const { error } = await supabase.auth.resetPasswordForEmail(email);
+        if (error) throw error;
+        return email;
+    }
+
+    async resetPasswordWithOtp(uniNumber, token, newPassword) {
+        const email = this.formatStudentEmail(uniNumber);
+        const cleanToken = String(token ?? '').trim();
+
+        if (!email) throw new Error("University number is required.");
+        if (cleanToken.length < 6) throw new Error("Please enter the complete 6-digit code.");
+        if (!newPassword || newPassword.length < 8) throw new Error("Password must be at least 8 characters.");
+
+        const { error } = await supabase.auth.verifyOtp({
+            email: email,
+            token: cleanToken,
+            type: 'recovery'
+        });
+        if (error) throw error;
+
+        const { error: updateErr } = await supabase.auth.updateUser({ password: newPassword });
+        if (updateErr) throw updateErr;
+
+        await supabase.auth.signOut();
+    }
+
     async signOut() {
         const { error } = await supabase.auth.signOut();
         if (error) throw error;
+
+        this.#userID = undefined;
+        this.#role = '';
     }
 
     async getCurrentUser() {
@@ -172,6 +211,20 @@ export class User {
         return session;
     }
 
+    async getCurrentProfile() {
+        const user = await this.getCurrentUser();
+        if (!user) return null;
+
+        const { data, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('user_id', user.id)
+            .single();
+
+        if (error) return null;
+        return data;
+    }
+
     onAuthStateChange(callback) {
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
             (_event, session) => callback(session)
@@ -179,62 +232,16 @@ export class User {
         return () => subscription?.unsubscribe();
     }
 
-    async sendRecoveryOtp(uniNumber){
-        const email = this.formatStudentEmail(uniNumber);
-        if (!email) throw new Error("University number required");
-
-        const {error} = await supabase.auth.resetPasswordForEmail(email);
-        if (error) throw error;
-        return email;
-    }
-
-    async resetPasswordWithOTP(uniNumber, token, newPassword){
-        const email = this.formatStudentEmail(uniNumber);
-        const cleanToken = String(token ?? '').trim();
-
-        if (!email) throw new Error("University number is required.");
-        if (cleanToken.length < 6) throw new Error("Please enter the complete 6-digit code.");
-        if (!newPassword || newPassword.length < 8) throw new Error("Password must be at least 8 characters.");
-
-        const {error} = await supabase.auth.verifyOtp({
-            email: email,
-            token: cleanToken,
-            type: 'recovery'
-        });
-
-        if (error) throw error;
-
-        const {error: updateErr} = await supabase.auth.updateUser({password: newPassword})
-
-        if (updateErr) throw updateErr;
-
+    async deleteMyAccount() {
+        const { error } = await supabase.rpc('delete_my_account');
+        if (error) throw new Error(error.message);
         await supabase.auth.signOut();
-
     }
 
-    async resendSignUpOTP(email){
-        const {error} = await supabase.auth.resend({
-            type: 'signup',
-            email: email?.trim().toLowerCase()
-        })
-
-        if (error) throw error;
+    async clearMyHistory() {
+        const { error } = await supabase.rpc('clear_my_history');
+        if (error) throw new Error(error.message);
     }
-
-    async getCurrentProfile(){
-        const user = this.getCurrentUser();
-        if (!user) return null;
-
-        const {data, error} = await supabase
-            .from('profiles')
-            .select("*")
-            .eq('user_id', user_id)
-            .single();
-        
-        if (error) return null;
-        return data;
-    }
-
 }
 
 export const authService = new User();

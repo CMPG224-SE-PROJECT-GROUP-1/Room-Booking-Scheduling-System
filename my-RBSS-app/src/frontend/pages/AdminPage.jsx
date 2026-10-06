@@ -3,6 +3,13 @@ import Card from "../components/Card";
 import Button from "../components/Button";
 import TextCard from "../components/TextCard";
 import { AdminUser } from "../../backend/AdminUser";
+import { authService } from "../../backend/User";
+import "./Dashboard.css";
+
+const ROLES = ["student", "teacher", "postgrad", "manager", "admin"];
+
+const fmtTime = (iso) =>
+  new Date(iso).toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
 
 export default function AdminPage() {
   const admin = useMemo(() => new AdminUser(), []);
@@ -10,21 +17,31 @@ export default function AdminPage() {
   const [bookings, setBookings] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [users, setUsers] = useState([]);
-  const [codes, setCodes] = useState({});          
+  const [maintenance, setMaintenance] = useState([]);
+  const [audit, setAudit] = useState([]);
+  const [myId, setMyId] = useState(null);
+  const [codes, setCodes] = useState({});          // { [booking_id]: "1234" } what the admin typed
+  const [mForm, setMForm] = useState({ room_id: "", start: "", end: "", reason: "" });
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState(null);
 
   async function loadAll() {
     try {
       setLoading(true);
-      const [b, r, u] = await Promise.all([
+      const [b, r, u, m, a, me] = await Promise.all([
         admin.listUpcomingBookings(),
         admin.listRooms(),
         admin.listUsers(),
+        admin.listMaintenance(),
+        admin.listAuditLog(30),
+        authService.getCurrentUser(),
       ]);
       setBookings(b);
       setRooms(r);
       setUsers(u);
+      setMaintenance(m);
+      setAudit(a);
+      setMyId(me?.id ?? null);
     } catch (err) {
       setMessage({ type: "error", text: err.message || "Failed to load admin data." });
     } finally {
@@ -47,18 +64,33 @@ export default function AdminPage() {
     }
   }
 
-  const fmtTime = (iso) =>
-    new Date(iso).toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+  function onSchedule() {
+    if (!mForm.room_id || !mForm.start || !mForm.end) {
+      setMessage({ type: "error", text: "Please choose a room, a start time and an end time." });
+      return;
+    }
+    run(
+      () =>
+        admin.scheduleMaintenance(
+          mForm.room_id,
+          new Date(mForm.start).toISOString(),
+          new Date(mForm.end).toISOString(),
+          mForm.reason
+        ),
+      "Maintenance scheduled. Overlapping bookings were cancelled."
+    );
+    setMForm({ room_id: "", start: "", end: "", reason: "" });
+  }
 
   return (
     <div className="app-frame">
       <TextCard
         tag="Admin"
         title="Admin Panel"
-        metaLeft="CHECK-INS • ROOMS • USERS"
+        metaLeft="CHECK-INS • ROOMS • USERS • AUDIT"
         metaRight=""
       >
-        <p>Check students in with their 4-digit code, block rooms for maintenance, and manage accounts.</p>
+        <p>Check students in with their 4-digit code, block rooms, schedule maintenance and manage accounts.</p>
       </TextCard>
 
       <div className="home-body">
@@ -71,7 +103,6 @@ export default function AdminPage() {
 
           {loading && <div className="dashboard-state-text">Loading...</div>}
 
-          {/* ---------- CHECK-INS ---------- */}
           <section className="dashboard-section">
             <h3 className="section-title">Bookings & Check-in</h3>
             {bookings.length === 0 ? (
@@ -113,6 +144,17 @@ export default function AdminPage() {
                           </Button>
                         </>
                       )}
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          const reason = window.prompt("Reason for cancelling this booking:");
+                          if (reason !== null) {
+                            run(() => admin.cancelAnyBooking(b.booking_id, reason), "Booking cancelled.");
+                          }
+                        }}
+                      >
+                        Cancel booking
+                      </Button>
                     </div>
                   </Card>
                 ))}
@@ -129,8 +171,7 @@ export default function AdminPage() {
                   <div className="booking-details">
                     <div className="booking-room">{r.building} • Room {r.room_number}</div>
                     <div className="booking-meta">
-                      Capacity {r.capacity} •{" "}
-                      <span>{r.availability ? "Available" : "Blocked"}</span>
+                      Capacity {r.capacity} • <span>{r.availability ? "Available" : "Blocked"}</span>
                     </div>
                   </div>
                   <div className="booking-actions">
@@ -159,34 +200,117 @@ export default function AdminPage() {
             </div>
           </section>
 
-          {/* ---------- USERS ---------- */}
           <section className="dashboard-section">
-            <h3 className="section-title">Users</h3>
+            <h3 className="section-title">Maintenance Windows</h3>
+
+            <Card className="booking-card">
+              <div className="booking-details">
+                <select value={mForm.room_id} onChange={(e) => setMForm({ ...mForm, room_id: e.target.value })}>
+                  <option value="">Choose a room…</option>
+                  {rooms.map((r) => (
+                    <option key={r.room_id} value={r.room_id}>{r.building} • {r.room_number}</option>
+                  ))}
+                </select>
+                <label>From <input type="datetime-local" value={mForm.start}
+                  onChange={(e) => setMForm({ ...mForm, start: e.target.value })} /></label>
+                <label>To <input type="datetime-local" value={mForm.end}
+                  onChange={(e) => setMForm({ ...mForm, end: e.target.value })} /></label>
+                <input placeholder="Reason (optional)" value={mForm.reason}
+                  onChange={(e) => setMForm({ ...mForm, reason: e.target.value })} />
+              </div>
+              <div className="booking-actions">
+                <Button variant="solid" onClick={onSchedule}>Schedule maintenance</Button>
+              </div>
+            </Card>
+
             <div className="bookings-list">
-              {users.map((u) => (
-                <Card key={u.user_id} className="booking-card">
+              {maintenance.map((m) => (
+                <Card key={m.maintenance_id} className="booking-card">
                   <div className="booking-details">
-                    <div className="booking-room">{u.full_name} ({u.student_number})</div>
-                    <div className="booking-meta">
-                      {u.role} • <span>{u.is_active ? "Active" : "Deactivated"}</span>
-                    </div>
+                    <div className="booking-room">{m.rooms?.building} • Room {m.rooms?.room_number}</div>
+                    <div className="booking-time">{fmtTime(m.start_time)} – {fmtTime(m.end_time)}</div>
+                    {m.reason && <div className="booking-meta">Reason: <span>{m.reason}</span></div>}
                   </div>
                   <div className="booking-actions">
                     <Button
                       variant="outline"
-                      onClick={() =>
-                        run(
-                          () => admin.setUserActive(u.user_id, !u.is_active),
-                          u.is_active ? "User deactivated." : "User reactivated."
-                        )
-                      }
+                      onClick={() => run(() => admin.cancelMaintenance(m.maintenance_id), "Maintenance window removed.")}
                     >
-                      {u.is_active ? "Deactivate" : "Reactivate"}
+                      Remove
                     </Button>
                   </div>
                 </Card>
               ))}
             </div>
+          </section>
+
+          <section className="dashboard-section">
+            <h3 className="section-title">Users</h3>
+            <div className="bookings-list">
+              {users.map((u) => {
+                const isMe = u.user_id === myId;
+                return (
+                  <Card key={u.user_id} className="booking-card">
+                    <div className="booking-details">
+                      <div className="booking-room">
+                        {u.full_name} ({u.student_number}){isMe ? " • you" : ""}
+                      </div>
+                      <div className="booking-meta">
+                        {u.is_active ? "Active" : "Deactivated"}
+                      </div>
+                    </div>
+                    <div className="booking-actions">
+                      <select
+                        value={u.role}
+                        disabled={isMe}
+                        onChange={(e) =>
+                          run(() => admin.updateUser(u.user_id, { role: e.target.value }), "Role updated.")
+                        }
+                      >
+                        {ROLES.map((r) => (
+                          <option key={r} value={r}>{r}</option>
+                        ))}
+                      </select>
+                      <Button
+                        variant="outline"
+                        disabled={isMe}
+                        onClick={() =>
+                          run(
+                            () => admin.setUserActive(u.user_id, !u.is_active),
+                            u.is_active ? "User deactivated." : "User reactivated."
+                          )
+                        }
+                      >
+                        {u.is_active ? "Deactivate" : "Reactivate"}
+                      </Button>
+                    </div>
+                  </Card>
+                );
+              })}
+            </div>
+          </section>
+
+          <section className="dashboard-section">
+            <h3 className="section-title">Audit Log (latest 30)</h3>
+            {audit.length === 0 ? (
+              <Card className="empty-state-card"><p>No audit entries yet.</p></Card>
+            ) : (
+              <table className="schedule">
+                <thead>
+                  <tr><th>When</th><th>Action</th><th>Table</th><th>By</th></tr>
+                </thead>
+                <tbody>
+                  {audit.map((a) => (
+                    <tr key={a.log_id}>
+                      <td>{fmtTime(a.timestamp)}</td>
+                      <td>{a.action}</td>
+                      <td>{a.table_affected}</td>
+                      <td>{a.profiles?.student_number ?? "system"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </section>
         </main>
       </div>

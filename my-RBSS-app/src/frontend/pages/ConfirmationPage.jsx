@@ -4,7 +4,7 @@ import Card from "../components/Card";
 import Button from "../components/Button";
 import PhotoCard from "../components/PhotoCard";
 import { bookingManager } from "../../backend/BookingManager";
-import { toIso } from "../../frontend/utils/slots";
+import { toIso, CHECK_IN_GRACE_MINUTES } from "../../backend/slots";
 import './ConfirmationPage.css';
 
 export default function ConfirmationPage(){
@@ -14,11 +14,13 @@ export default function ConfirmationPage(){
     const room = location.state?.room;
     const slot = location.state?.slot;
     const roomUse = location.state?.roomUse;
+    const attendees = location.state?.capacity;
 
     const [agreed, setAgreed] = useState(false);
     const [loading, setLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState(null);
-    const [booking, setBooking] = useState(null);  
+    const [booking, setBooking] = useState(null);
+
 
     useEffect(() => {
         if (!room || !slot) {
@@ -38,7 +40,8 @@ export default function ConfirmationPage(){
                     start: toIso(slot.date, slot.startTime),
                     end: toIso(slot.date, slot.endTime)
                 },
-                roomUse
+                roomUse,
+                attendees
             );
             setBooking(saved);
         } catch (err) {
@@ -61,7 +64,8 @@ export default function ConfirmationPage(){
                     <p>Date: <b>{slot.displayDate}</b></p>
                     <p>Allocated time: <b>{slot.startTime} - {slot.endTime}</b></p>
                     <p>Purpose: <b>{roomUse}</b></p>
-                    <p>Checking code: <b>{booking ? booking.check_in_code : "Shown after you confirm"}</b></p>
+                    <p>People: <b>{attendees}</b></p>
+                    <p>Check-in code: <b>{booking ? booking.check_in_code : "Shown after you confirm"}</b></p>
                 </Card>
 
                 <div className="confirm-right">
@@ -72,7 +76,7 @@ export default function ConfirmationPage(){
                         <li>No food or drink near equipment</li>
                         <li>Leave the room as you found it</li>
                         <li>Report faults at the front desk</li>
-                        <li>Check in within 15 minutes of your start time</li>
+                        <li>Check in within {CHECK_IN_GRACE_MINUTES} minutes of your start time</li>
                         </ul>
                     </Card>
 

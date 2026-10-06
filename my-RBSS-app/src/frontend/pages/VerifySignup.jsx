@@ -13,10 +13,16 @@ export default function VerifySignup() {
 
     const [otp, setOtp] = useState('');
     const [errorMsg, setErrorMsg] = useState(null);
-    const [loading, setLoading] = useState(false);
-
     const [resendMsg, setResendMsg] = useState(null);
     const [cooldown, setCooldown] = useState(0);
+    const [loading, setLoading] = useState(false);
+
+    // no email = they opened this page directly, so send them back to sign up
+    useEffect(() => {
+        if (!email) {
+            navigate("/signup", { replace: true });
+        }
+    }, [email, navigate]);
 
     useEffect(() => {
         if (cooldown <= 0) return;
@@ -24,28 +30,10 @@ export default function VerifySignup() {
         return () => clearTimeout(timer);
     }, [cooldown]);
 
-    const onResend = async () => {
-        setErrorMsg(null);
-        setResendMsg(null);
-        try {
-            await authService.resendSignUpOtp(email);
-            setResendMsg("A new code has been sent.");
-            setCooldown(60);
-        } catch (err) {
-            setErrorMsg(err.message || "Could not resend the code.");
-        }
-    };
-
-
-    useEffect(() => {
-        if (!email) {
-            navigate("/signup", { replace: true });
-        }
-    }, [email, navigate]);
-
     const onVerifyOtp = async (e) => {
         e.preventDefault();
         setErrorMsg(null);
+        setResendMsg(null);
 
         const cleanToken = String(otp ?? '').trim();
         if (cleanToken.length < 6) {
@@ -64,6 +52,18 @@ export default function VerifySignup() {
         }
     };
 
+    const onResend = async () => {
+        setErrorMsg(null);
+        setResendMsg(null);
+        try {
+            await authService.resendSignUpOtp(email);
+            setResendMsg("A new code has been sent.");
+            setCooldown(60);
+        } catch (err) {
+            setErrorMsg(err.message || "Could not resend the code.");
+        }
+    };
+
     return (
         <div className="page-wrapper">
             <main className="otp-page">
@@ -76,6 +76,9 @@ export default function VerifySignup() {
 
                     {errorMsg && (
                         <p style={{ color: "red", fontSize: "0.9rem" }}>{errorMsg}</p>
+                    )}
+                    {resendMsg && (
+                        <p style={{ color: "green", fontSize: "0.9rem" }}>{resendMsg}</p>
                     )}
 
                     <Field
@@ -91,12 +94,9 @@ export default function VerifySignup() {
                         {loading ? "Verifying..." : "Confirm & Sign In"}
                     </Button>
 
-                    {resendMsg && <p style={{ color: "green", fontSize: "0.9rem" }}>{resendMsg}</p>}
-
                     <Button type="button" variant="outline" disabled={cooldown > 0} onClick={onResend}>
                         {cooldown > 0 ? `Resend code in ${cooldown}s` : "Resend code"}
                     </Button>
-
                 </form>
             </main>
         </div>

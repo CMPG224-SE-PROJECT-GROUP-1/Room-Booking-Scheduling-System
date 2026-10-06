@@ -1,7 +1,7 @@
 import { Booking } from './Booking.js';
 import { Room } from './Room.js';
 import { supabase } from '../supabaseClient.js';
-import { CHECK_IN_GRACE_MINUTES } from '../frontend/utils/slots.js';
+import { CHECK_IN_GRACE_MINUTES } from './slots.js';
 
 export class BookingManager {
   #activeBookings;
@@ -26,7 +26,7 @@ export class BookingManager {
 
     const { data, error } = await supabase
       .from('bookings')
-      .select('*, rooms!bookings_room_fk(room_number, building_name)')
+      .select('*, rooms(room_number, building, capacity)')
       .eq('user_id', userId)
       .order('start_time', { ascending: false });
 
@@ -45,27 +45,30 @@ export class BookingManager {
             row.room_use,
             row.check_in_code,
             row.status,
-            row.checked_in
+            row.checked_in,
+            row.attendees
           )
       );
 
     return data || [];
   }
 
+
   async fetchBusySlots() {
-    const { data, error } = await supabase
-      .from('booked_slots')
-      .select('room_id, start_time, end_time');
+    const { data, error } = await supabase.rpc('busy_slots');
 
     if (error) throw new Error(`Fetch error: ${error.message}`);
     return data || [];
   }
 
   async searchRooms({ building, minCapacity } = {}) {
-    let query = supabase.from('rooms').select('*').eq('availability', true);
+    let query = supabase
+      .from('rooms')
+      .select('*, room_amenities(amenities(name))')
+      .eq('availability', true);
 
     if (building && building !== 'Any building') {
-      query = query.eq('building_name', building);
+      query = query.eq('building', building);
     }
     if (minCapacity) {
       query = query.gte('capacity', minCapacity);
@@ -81,13 +84,13 @@ export class BookingManager {
         row.building,
         row.capacity,
         row.availability,
-        row.amenities,
+        (row.room_amenities || []).map((ra) => ra.amenities.name),
         row.image_url
       ).toObject()
     );
   }
 
-  async createBooking(roomID, slot, roomUse) {
+  async createBooking(roomID, slot, roomUse, attendees = null) {
     const userId = await this.#getUserId();
 
     if (new Date(slot.start) < new Date()) {
@@ -102,6 +105,7 @@ export class BookingManager {
         start_time: slot.start,
         end_time: slot.end,
         room_use: roomUse,
+        attendees: attendees,
         status: true,
       })
       .select()
@@ -110,6 +114,14 @@ export class BookingManager {
     if (error) {
       if (error.code === '23P01') {
         throw new Error('Sorry, someone just booked that room for this time. Please pick another slot.');
+      }
+
+      if (error.code === 'P0001') {
+        throw new Error(error.message);
+      }
+      
+      if (error.code === '42501') {
+        throw new Error('You are not allowed to make this booking. Is your account active?');
       }
       throw new Error(`Could not create booking: ${error.message}`);
     }
@@ -123,42 +135,39 @@ export class BookingManager {
       roomUse,
       data.check_in_code,
       data.status,
-      data.checked_in
+      data.checked_in,
+      data.attendees
     );
     this.#activeBookings.push(booking);
     return booking.toObject();
   }
 
-  
+
   async processCheckIn(bookingID, code) {
-    const { data: row, error } = await supabase
+    const { error } = await supabase.rpc('check_in_booking', {
+      p_booking_id: String(bookingID),
+      p_code: String(code ?? '').trim(),
+    });
+
+    if (error) throw new Error(error.message);
+    return true;
+  }
+
+  async updateBooking(bookingID, changes = {}) {
+    const update = {};
+    if (changes.room_use !== undefined) update.room_use = changes.room_use;
+    if (changes.attendees !== undefined) update.attendees = changes.attendees;
+    if (Object.keys(update).length === 0) throw new Error('Nothing to update.');
+
+    const { data, error } = await supabase
       .from('bookings')
-      .select('*')
+      .update(update)
       .eq('booking_id', bookingID)
-      .single();
+      .eq('status', true)
+      .select();
 
-    if (error || !row) throw new Error('Booking not found.');
-    if (row.status !== true) throw new Error('This booking has been cancelled.');
-    if (row.checked_in) throw new Error('Already checked in.');
-
-    const booking = new Booking(
-      row.booking_id, row.user_id, row.room_id, row.start_time, row.end_time,
-      row.room_use, row.check_in_code, row.status, row.checked_in
-    );
-
-    const graceMs = CHECK_IN_GRACE_MINUTES * 60 * 1000;
-    const start = booking.getStartTime.getTime();
-    if (Date.now() < start - graceMs) throw new Error('Too early to check in.');
-    if (Date.now() > start + graceMs) throw new Error('The check-in window has closed.');
-
-    if (!booking.checkIn(code)) throw new Error('Wrong check-in code.');
-
-    const { error: updateError } = await supabase
-      .from('bookings')
-      .update({ checked_in: true })
-      .eq('booking_id', bookingID);
-
-    if (updateError) throw new Error(`Could not check in: ${updateError.message}`);
+    if (error) throw new Error(error.code === 'P0001' ? error.message : `Could not update booking: ${error.message}`);
+    if (!data || data.length === 0) throw new Error('Booking not found (or it cannot be edited).');
     return true;
   }
 
@@ -179,7 +188,7 @@ export class BookingManager {
     return true;
   }
 
-  
+
   async autoCancelUnclaimed() {
     for (const booking of [...this.#activeBookings]) {
       if (booking.isExpired()) {
