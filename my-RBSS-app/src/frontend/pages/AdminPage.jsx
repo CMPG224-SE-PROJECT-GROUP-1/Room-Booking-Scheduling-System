@@ -26,28 +26,41 @@ export default function AdminPage() {
   const [message, setMessage] = useState(null);
 
   async function loadAll() {
-    try {
-      setLoading(true);
-      const [b, r, u, m, a, me] = await Promise.all([
-        admin.listUpcomingBookings(),
-        admin.listRooms(),
-        admin.listUsers(),
-        admin.listMaintenance(),
-        admin.listAuditLog(30),
-        authService.getCurrentUser(),
-      ]);
-      setBookings(b);
-      setRooms(r);
-      setUsers(u);
-      setMaintenance(m);
-      setAudit(a);
-      setMyId(me?.id ?? null);
-    } catch (err) {
-      setMessage({ type: "error", text: err.message || "Failed to load admin data." });
-    } finally {
-      setLoading(false);
+  setLoading(true);
+
+  const calls = {
+    Bookings: admin.listUpcomingBookings(),
+    Rooms: admin.listRooms(),
+    Users: admin.listUsers(),
+    Maintenance: admin.listMaintenance(),
+    "Audit log": admin.listAuditLog(30),
+    Me: authService.getCurrentUser(),
+  };
+
+  const names = Object.keys(calls);
+  const results = await Promise.allSettled(Object.values(calls));
+  const setters = {
+    Bookings: setBookings,
+    Rooms: setRooms,
+    Users: setUsers,
+    Maintenance: setMaintenance,
+    "Audit log": setAudit,
+    Me: (me) => setMyId(me?.id ?? null),
+  };
+
+  const failed = [];
+  results.forEach((r, i) => {
+    if (r.status === "fulfilled") {
+      setters[names[i]](r.value);
+    } else {
+      console.error(`Admin: ${names[i]} failed`, r.reason);
+      failed.push(`${names[i]}: ${r.reason?.message || r.reason}`);
     }
-  }
+  });
+
+  if (failed.length > 0) setMessage({ type: "error", text: failed.join("  |  ") });
+  setLoading(false);
+}
 
   useEffect(() => {
     loadAll();
