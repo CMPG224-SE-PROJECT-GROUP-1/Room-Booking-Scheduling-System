@@ -2,7 +2,7 @@ import { supabase } from '../supabaseClient';
 
 // While testing everything goes to test gmail.
 // When we go live: set USE_TEST_EMAIL = false and it becomes S123456@university.ac.za
-const USE_TEST_EMAIL = true;
+const USE_TEST_EMAIL = false;
 const TEST_EMAIL_NAME = 'neomasebe9';
 const TEST_EMAIL_DOMAIN = 'gmail.com';
 const SCHOOL_EMAIL_DOMAIN = 'university.ac.za';
