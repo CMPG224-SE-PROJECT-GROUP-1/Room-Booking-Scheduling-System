@@ -12,7 +12,7 @@ import {
 } from '../../backend/slots';
 import { useSlowLoad } from '../hooks/useSlowLoad';
 
-const BUILDING_OPTIONS = ['Any building', 'Library', 'Humanities', 'Science Block', 'Commerce'];
+const BUILDING_OPTIONS = ['Any building', 'Robbenhoek Library', 'Eagles Humanities Library', 'Thuto Research Center', 'The Commerce Library'];
 const TIME_OPTIONS = ['Any time', ...TIMES];
 const AMENITY_OPTIONS = [
   'Any amenity',
