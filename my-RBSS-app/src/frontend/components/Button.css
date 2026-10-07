@@ -1,32 +1,48 @@
 .btn {
-  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 700;
   font-size: 13.5px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  padding: 14px 22px;
+  padding: 13px 22px;
   border-radius: 5px;
   cursor: pointer;
+  transition: filter 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, transform 0.05s ease;
 }
+
 .btn-full { width: 100%; }
 
 .btn-solid {
   background: var(--accent-fill);
   color: var(--accent-fill-text);
 }
+.btn-solid:hover:not(:disabled) { filter: brightness(1.08); }
 
 .btn-outline {
   background: transparent;
-  border: 1px solid var(--border);
+  border-color: var(--border);
   color: var(--text-secondary);
 }
+.btn-outline:hover:not(:disabled) {
+  background: var(--hover-tint);
+  border-color: var(--accent-fill);
+  color: var(--text-primary);
+}
 
-.btn-disabled { 
-  background: var(--disabled); 
+.btn:active:not(:disabled) { transform: translateY(1px); }
+
+.btn-disabled,
+.btn:disabled {
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
   cursor: not-allowed;
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
+  opacity: 0.7;
+  filter: none;
+  transform: none;
 }
-
-.btn:disabled { opacity: 0.4; cursor: not-allowed; }
