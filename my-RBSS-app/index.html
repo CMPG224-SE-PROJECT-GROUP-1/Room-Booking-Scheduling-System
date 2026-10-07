@@ -5,15 +5,21 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>my-rbss-app</title>
+    <meta name="color-scheme" content="dark light" />
+    <title>UniSpace | Room Booking</title>
+
     <script>
-      const saved = localStorage.getItem('theme') || 'light';
-      document.documentElement.setAttribute('data-theme', saved);
+      // runs before React so the right theme shows from the very first paint
+      try {
+        document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
     </script>
-    
   </head>
   <body>
     <div id="root"></div>

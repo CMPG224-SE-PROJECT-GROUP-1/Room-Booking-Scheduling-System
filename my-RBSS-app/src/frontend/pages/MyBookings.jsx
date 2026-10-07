@@ -4,7 +4,7 @@ import { ActiveBookingCard, PastBookingCard } from "../components/BookingCards";
 import { useMyBookings } from "../hooks/useMyBookings";
 import { useSlowLoad } from "../hooks/useSlowLoad";
 
-import './MyBookings.css'
+import './Dashboard.css'
 
 export default function MyBookings(){
     const {
