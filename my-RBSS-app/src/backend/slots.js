@@ -4,7 +4,7 @@ export const CHECK_IN_GRACE_MINUTES = 15;
 
 export const DAYS_AHEAD = 28;
 export const DAYS_PER_PAGE = 7;
-export const IDLE_LOGOUT_MINUTES = 0.5;
+export const IDLE_LOGOUT_MINUTES = 5;
 export const SLOW_LOAD_SECONDS = 15;
 export const MAX_LOGIN_ATTEMPTS = 3;
 export const LOGIN_LOCK_SECONDS = 60;
