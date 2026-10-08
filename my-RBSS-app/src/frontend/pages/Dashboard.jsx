@@ -10,7 +10,9 @@ import { bookingManager } from "../../backend/BookingManager";
 import { authService } from "../../backend/User";
 import { useMyBookings } from "../hooks/useMyBookings";
 import { useSlowLoad } from "../hooks/useSlowLoad";
+import { supabase } from "../../supabaseClient";
 import "./Dashboard.css";
+
 
 export function Dashboard() {
   const navigate = useNavigate();
@@ -23,6 +25,7 @@ export function Dashboard() {
   const [userName, setUserName] = useState("User");
   const [availableCount, setAvailableCount] = useState(0);
   const [statsLoading, setStatsLoading] = useState(true);
+  const [maintenanceText, setMaintenanceText] = useState("The place where all your studying goals come true!");
 
   const slow = useSlowLoad(loading || statsLoading);
 
@@ -52,7 +55,45 @@ export function Dashboard() {
         setStatsLoading(false);
       }
     }
+
+    async function loadMaintenance() {
+
+      function formatTime(time){
+        const formatted = new Date(time).toLocaleString(undefined, {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+
+        return formatted;
+      }
+    
+      try {
+        const { data: randomRoom, error } = await supabase
+          .rpc('get_random_room_maintenance', { target_limit: 1 })
+          .maybeSingle();
+
+        if (error) {
+          console.error("Supabase RPC error:", error);
+          setActionError("Failed to load maintenance text");
+          return;
+        }
+
+        const messageText = randomRoom ? `Please note that Room ${randomRoom.room.room_number} in building '${randomRoom.room.building}' is scheduled for maintenance from [ ${formatTime(randomRoom.startTime)} ] until [ ${formatTime(randomRoom.endTime)} ]${randomRoom.reason ? ` due to [ ${randomRoom.reason} ]` : ""}.` : "The place where all your studying goals come true!";
+
+        setMaintenanceText(messageText);
+        
+      } catch (err) {
+        console.error("Maintenance text unexpected error:", err);
+        setActionError("Failed to load maintenance text");
+      }
+
+        
+    }
     loadStats();
+    loadMaintenance();
   }, [setActionError]);
 
   async function handleClearHistory() {
@@ -89,8 +130,7 @@ export function Dashboard() {
         metaRight={currentDate}
       >
         <p>
-          Maintenance is scheduled for Study Hall B this Thursday between 18:00
-          and 21:00. Room bookings remain open for all secondary halls.
+          {maintenanceText}
         </p>
       </TextCard>
 
