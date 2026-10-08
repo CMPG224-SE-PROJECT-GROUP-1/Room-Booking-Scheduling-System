@@ -1,25 +1,70 @@
 .sidebar {
   position: fixed;
-  top: 56px;
+  top: 60px;
   left: 0;
   bottom: 0;
   width: 210px;
   background: var(--panel-alt);
   border-right: 1px solid var(--border);
-  padding: 28px 22px;
-  transition: width 0.25s ease, padding 0.25s ease, transform 0.25s ease;
-  overflow: hidden;
+  padding: 24px 14px;
+  overflow-x: hidden;
+  overflow-y: auto;
   z-index: 100;
+  transition: width 0.25s ease, padding 0.25s ease, visibility 0s;
 }
 
 .sidebar-collapsed {
   width: 0;
   padding: 0;
   border-right: none;
+  visibility: hidden;
+  transition: width 0.25s ease, padding 0.25s ease, visibility 0s 0.25s;
+}
+
+.sidebar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .nav-link,
 .nav-link:visited {
   color: inherit;
   text-decoration: underline;
+}
+
+.sidebar .nav-link,
+.sidebar .nav-link:visited {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.sidebar .nav-link:hover {
+  background: var(--hover-tint);
+  color: var(--text-primary);
+}
+
+.sidebar .nav-link.active,
+.sidebar .nav-link[aria-current="page"] {
+  background: var(--accent-fill);
+  color: var(--accent-fill-text);
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    width: min(260px, 80vw);
+    box-shadow: var(--shadow);
+  }
+  .sidebar-collapsed {
+    box-shadow: none;
+  }
 }

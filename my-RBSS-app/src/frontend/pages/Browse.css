@@ -1,9 +1,5 @@
-.page-wrapper {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: var(--ink-panel);
-}
+
+@import "../components/PhotoCard.css";
 
 .browse-page {
   flex: 1;
@@ -18,10 +14,8 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px 32px 20px;
-  box-sizing: border-box;
 }
 
-/* Split container holding left and right panels */
 .browse-split-container {
   flex: 1;
   display: flex;
@@ -29,7 +23,6 @@
   border-top: 1px solid var(--border);
 }
 
-/* Left panel: Form area */
 .browse-left {
   flex: 0 0 380px;
   display: flex;
@@ -38,7 +31,6 @@
   padding: 40px 32px;
   background: var(--ink);
   border-right: 1px solid var(--accent-fill);
-  box-sizing: border-box;
 }
 
 .search-body {
@@ -47,62 +39,40 @@
 }
 
 .filters {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   background: var(--panel-alt);
   padding: 24px;
   border-radius: 8px;
   border: 1px solid var(--border);
 }
 
-.fgroup {
-  margin-bottom: 20px;
-}
-
-.fgroup label {
-  display: block;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10.5px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--accent-text);
-  margin-bottom: 8px;
-}
-
-.fake-select {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border: 1px solid var(--border);
-  border-radius: 5px;
-  padding: 10px 12px;
-  font-size: 13.5px;
-  color: var(--text-secondary);
-  background: var(--card);
-}
-
 .browse-right {
   flex: 1;
+  min-width: 0;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
   padding: 40px 48px;
   background: var(--ink-panel);
-  box-sizing: border-box;
 }
 
 .results {
   width: 100%;
-  max-width: 720px;
+  max-width: 760px;
 }
 
-.cards-row {
+.browse-page .cards-row {
   display: flex;
   gap: 16px;
   width: 100%;
   margin-bottom: 32px;
 }
 
-.picture-card {
+.browse-page .picture-card {
   flex: 0 0 220px;
+  min-height: 160px;
   padding: 0;
   overflow: hidden;
   display: flex;
@@ -117,163 +87,24 @@
   display: block;
 }
 
-/* Detail card */
-.detail-card {
+.browse-page .detail-card {
   flex: 1;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 16px;
+  flex-wrap: wrap;
 }
 
-.detail-card dl {
+.browse-page .detail-card dl {
   margin: 0;
   font-size: 13.5px;
   line-height: 1.6;
   color: var(--text-secondary);
 }
 
-.detail-card dl div {
-  margin-bottom: 4px;
-}
+.browse-page .detail-card dl div { margin-bottom: 4px; }
 
-/* Schedule table */
-table.schedule {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-  table-layout: fixed;
-}
-
-table.schedule th {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  color: var(--accent-text);
-  padding: 10px 8px;
-  border-bottom: 1px solid var(--border);
-  text-align: center;
-}
-
-table.schedule td {
-  text-align: center;
-  padding: 14px 8px;
-  border-bottom: 1px solid var(--border);
-  color: var(--text-muted);
-}
-
-table.schedule th:first-child,
-table.schedule td:first-child {
-  width: 70px;
-  text-align: left;
-  color: var(--text-secondary);
-}
-
-.slot-booked {
-  display: inline-block;
-  background: var(--accent-fill);
-  color: var(--accent-fill-text);
-  border-radius: 4px;
-  font-weight: 700;
-  font-size: 11px;
-  padding: 4px 10px;
-}
-
-.expandable-pic {
-  cursor: zoom-in;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.expandable-pic:hover {
-  opacity: 0.9;
-  transform: scale(1.02);
-}
-
-.picture-viewer-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(4px);
-  z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  cursor: zoom-out;
-  padding: 32px;
-  box-sizing: border-box;
-}
-
-.expanded-image {
-  max-width: 90vw;
-  max-height: 80vh;
-  object-fit: contain;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
-}
-
-.close-viewer-label {
-  margin-top: 16px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  user-select: none;
-}
-
-
-.slot-browser-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.active-slot-pill {
-  font-size: 13px;
-  color: var(--text-secondary);
-  font-family: 'JetBrains Mono', monospace;
-}
-
-.active-slot-pill b {
-  color: var(--text-secondary);
-}
-
-.room-nav-controls {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.nav-arrow-btn {
-  background: var(--card);
-  border: 1px solid var(--border);
-  color: var(--accent-text);
-  border-radius: 4px;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  font-weight: bold;
-  transition: all 0.15s ease;
-}
-
-.nav-arrow-btn:hover {
-  background: var(--accent-fill);
-  color: var(--accent-fill-text);
-  border-color: var(--accent-fill);
-}
-
-.room-counter {
-  font-size: 12px;
-  color: var(--text-secondary);
-  font-family: 'JetBrains Mono', monospace;
-}
-
-/* Status indicator on the detail card */
 .availability-status .status-open {
   color: var(--avail-slot);
   font-weight: 600;
@@ -299,17 +130,104 @@ table.schedule td:first-child {
   color: var(--text-muted);
 }
 
+.slot-browser-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.active-slot-pill {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.room-nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.slot-browser-bar .room-nav-controls { margin-bottom: 0; }
+
+.nav-arrow-btn {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--accent-text);
+  border-radius: 4px;
+  min-width: 28px;
+  width: auto;
+  height: 28px;
+  padding: 0 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.nav-arrow-btn:hover:not(:disabled) {
+  background: var(--accent-fill);
+  color: var(--accent-fill-text);
+  border-color: var(--accent-fill);
+}
+
+.nav-arrow-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.room-counter {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.browse-page table.schedule {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  table-layout: fixed;
+}
+
+.browse-page table.schedule th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--accent-text);
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+
+.browse-page table.schedule td {
+  text-align: center;
+  padding: 14px 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+.browse-page table.schedule th:first-child,
+.browse-page table.schedule td:first-child {
+  width: 96px;
+  text-align: left;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
 .schedule-slot-cell {
   cursor: pointer;
-  transition: background-color 0.15s ease, outline 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 
-.schedule-slot-cell:hover {
-  background: rgba(255, 255, 255, 0.05);
-}
+.schedule-slot-cell:hover { background: var(--hover-tint); }
 
 .schedule-slot-cell.cell-selected {
-  background: rgba(212, 163, 115, 0.12);
+  background: color-mix(in srgb, var(--accent-fill) 16%, transparent);
   outline: 1px solid var(--accent-fill);
 }
 
@@ -317,4 +235,44 @@ table.schedule td:first-child {
   font-size: 11px;
   font-weight: 600;
   color: var(--avail-slot);
+}
+
+
+.slot-booked {
+  display: inline-block;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 11px;
+  padding: 4px 10px;
+}
+
+@media (max-width: 900px) {
+  .browse-split-container { flex-direction: column; }
+
+  .browse-left {
+    flex: none;
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--accent-fill);
+    padding: 24px 16px;
+  }
+
+  .search-body { max-width: none; }
+  .browse-right { padding: 24px 16px; }
+  .browse-header { padding: 24px 16px 12px; }
+}
+
+@media (max-width: 640px) {
+  .browse-page .cards-row { flex-direction: column; }
+  .browse-page .picture-card { flex: none; height: 200px; }
+
+  .browse-page table.schedule {
+    display: block;
+    overflow-x: auto;
+    table-layout: auto;
+  }
+  .browse-page table.schedule th,
+  .browse-page table.schedule td { min-width: 76px; }
 }

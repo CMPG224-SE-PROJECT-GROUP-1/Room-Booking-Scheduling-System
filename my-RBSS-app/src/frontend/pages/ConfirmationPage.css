@@ -1,43 +1,75 @@
-.confirm-body { 
-    display: grid; grid-template-columns: 1fr 1fr; min-height: 400px; 
+.confirm-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "photo right"
+    "info  right";
+  gap: 24px;
+  align-items: start;
+  padding: 32px;
 }
 
-.confirm-body h2 { 
-    font-family: 'Fraunces', serif; font-size: 20px; color: #F6EFDC; margin: 0 0 16px; 
+.confirm-body > :nth-child(1) { grid-area: photo; }
+.confirm-body > :nth-child(2) { grid-area: info; }
+.confirm-body > :nth-child(3) { grid-area: right; }
+
+.info-card p {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--text-muted);
 }
 
-.confirm-right { 
-    padding: 34px 32px; 
+.info-card p:last-child { margin-bottom: 0; }
+.info-card p b { color: var(--text-primary); }
+
+.confirm-right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0;
 }
 
-.rules-card { 
-    margin-bottom: 20px; 
+.rules-card h4 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent-text);
+  margin: 0 0 12px;
 }
 
-.rules-card h4 { 
-    font-family: 'Space Grotesk', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-text); margin: 0 0 12px; 
+.rules-card ul {
+  margin: 0;
+  padding-left: 18px;
 }
 
-.rules-card ul { 
-    margin: 0; 
-    padding-left: 16px; 
+.rules-card li {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
 }
 
-.rules-card li { 
-    font-size: 13px; 
-    color: var(--text-secondary); 
-    margin-bottom: 6px; 
+.check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
 }
 
-.check-row { 
-    display: flex; 
-    align-items: flex-start; 
-    gap: 10px; 
-    font-size: 13px; 
-    color: var(--text-secondary); 
-    margin-bottom: 20px; 
-    cursor: pointer; }
+.check-row input {
+  margin-top: 3px;
+  accent-color: var(--accent-fill);
+}
 
-.check-row input { 
-    margin-top: 3px; 
-    accent-color: var(--accent-fill); }
+@media (max-width: 800px) {
+  .confirm-body {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "photo"
+      "info"
+      "right";
+    padding: 20px 14px;
+  }
+}
