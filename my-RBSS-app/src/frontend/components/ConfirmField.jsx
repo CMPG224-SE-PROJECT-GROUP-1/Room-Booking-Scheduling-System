@@ -9,7 +9,6 @@ export default function ConfirmField({ value, onChange, onValidate, passwordValu
     let text = '';
     if (hasInput) text = matches ? 'stamped — passwords match' : "doesn't match yet";
 
-    // Trigger the callback whenever validity changes
     useEffect(() => {
         const valid = matches;
         onValidate?.(valid);
@@ -28,10 +27,7 @@ export default function ConfirmField({ value, onChange, onValidate, passwordValu
         />
 
         <div className={`match-row ${matches ? 'ok' : ''}`}>
-            <svg className="stamp" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="9" />
-            <path d="M7.5 12.5l3 3 6-6.5" />
-            </svg>
+            
             <span className="match-text">{text}</span>
         </div>
         </div>

@@ -12,7 +12,7 @@ export default function LogOut(){
 
             const session = await authService.getCurrentSession?.(); 
 
-            window.alert("Successfully logged out! Active session: " + session);
+            // window.alert("Successfully logged out! Active session: " + session);
             navigate('/');
         } catch (err) {
             window.alert("Logout failed: " + err.message);
