@@ -26,11 +26,57 @@
   background: var(--ink-panel);
 }
 
-.signup-right h1 {
+.signup-welcome {
+  width: 100%;
+  max-width: 400px;
+}
+
+.signup-tag {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.signup-right h2 {
   font-family: 'Fraunces', serif;
-  font-size: 40px;
+  font-size: 38px;
+  line-height: 1.15;
   color: var(--accent-text);
+  margin: 0 0 16px;
+}
+
+.signup-desc {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0 0 24px;
+}
+
+.signup-steps {
+  margin: 0 0 24px;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.signup-steps li::marker {
+  color: var(--accent-text);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.signup-note {
+  font-size: 12.5px;
+  color: var(--text-muted);
   margin: 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
 }
 
 .signup-form {
