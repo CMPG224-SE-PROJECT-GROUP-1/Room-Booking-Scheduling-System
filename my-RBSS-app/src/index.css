@@ -24,6 +24,7 @@
   --hover-tint: rgba(255, 255, 255, 0.06);
   --focus-ring: #E3BE5C;
   --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --loading-bar: #E3BE5C;
 }
 
 [data-theme="light"] {
@@ -52,6 +53,7 @@
   --hover-tint: rgba(28, 26, 22, 0.06);
   --focus-ring: #583c07;
   --shadow: 0 8px 24px rgba(28, 26, 22, 0.18);
+  --loading-bar: #E3BE5C;
 }
 
 
