@@ -67,7 +67,7 @@ export default function SignUp() {
 
         <ol className="signup-steps">
             <li>Enter your name and university number (e.g. S123456).</li>
-            <li>Choose a password of at least 8 characters.</li>
+            <li>Choose a password of at least 8 characters, including numbers and special characters.</li>
             <li>Enter the 6-digit code we email to your university address.</li>
         </ol>
 
