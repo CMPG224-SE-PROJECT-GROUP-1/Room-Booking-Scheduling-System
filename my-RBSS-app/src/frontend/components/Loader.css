@@ -2,19 +2,23 @@
 .loader {
   width: 45px;
   aspect-ratio: 1;
-  --c: no-repeat linear-gradient(#000 calc(50% - 10px),#0000 0 calc(50% + 10px),#000 0);
+
+  --color: var(--loading-bar); 
+
+  --c: no-repeat linear-gradient(var(--color) calc(50% - 10px), transparent 0 calc(50% + 10px), var(--color) 0);
   background: 
     var(--c) 0%   100%,
     var(--c) 50%  100%,
     var(--c) 100% 100%;
   background-size: 20% calc(200% + 20px);
-  animation:l4 1s infinite linear;
+  animation: l4 1s infinite linear;
 }
+
 @keyframes l4 {
-    33%  {background-position: 0% 50%,50% 100%,100% 100%}
-    50%  {background-position: 0%  0%,50%  50%,100% 100%}
-    66%  {background-position: 0%  0%,50%   0%,100%  50%}
-    100% {background-position: 0%  0%,50%   0%,100%   0%}
+  33%  { background-position: 0% 50%, 50% 100%, 100% 100%; }
+  50%  { background-position: 0%  0%, 50%  50%, 100% 100%; }
+  66%  { background-position: 0%  0%, 50%   0%, 100%  50%; }
+  100% { background-position: 0%  0%, 50%   0%, 100%   0%; }
 }
 
 .text-loader {
