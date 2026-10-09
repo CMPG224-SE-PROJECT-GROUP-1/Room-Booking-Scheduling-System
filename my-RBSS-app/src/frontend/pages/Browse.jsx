@@ -11,6 +11,7 @@ import {
   TIMES, SLOT_HOURS, DAYS_AHEAD, DAYS_PER_PAGE, addHours, formatDisplayDate,
 } from '../../backend/slots';
 import { useSlowLoad } from '../hooks/useSlowLoad';
+import "../components/Loader.css";
 
 const BUILDING_OPTIONS = ['Any building', 'Robbenhoek Library', 'Eagles Humanities Library', 'Thuto Research Center', 'The Commerce Building'];
 const TIME_OPTIONS = ['Any time', ...TIMES];
@@ -183,7 +184,7 @@ export default function Browse() {
     return (
       <div className="page-wrapper">
         <div className="browse-header">
-          <p>Loading rooms...</p>
+          <div class="loader"></div>
           {slow && <SlowLoadBanner />}
         </div>
       </div>

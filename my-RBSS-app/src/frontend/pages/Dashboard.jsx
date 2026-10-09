@@ -12,6 +12,7 @@ import { useMyBookings } from "../hooks/useMyBookings";
 import { useSlowLoad } from "../hooks/useSlowLoad";
 import { supabase } from "../../supabaseClient";
 import "./Dashboard.css";
+import "../components/Loader.css";
 
 
 export function Dashboard() {
@@ -128,6 +129,7 @@ export function Dashboard() {
         title={`Welcome back, ${userName}.`}
         metaLeft="SYSTEM ANNOUNCEMENT"
         metaRight={currentDate}
+        isLoading = {statsLoading}
       >
         <p>
           {maintenanceText}
@@ -145,14 +147,20 @@ export function Dashboard() {
           <div className="stat-row">
             <Card
               className="stat-card clickable"
-              onClick={() => navigate("/browse")}
+              onClick={() => !statsLoading && navigate("/browse")}
+              isLoading={statsLoading}
             >
-              <span className="num">{statsLoading ? "—" : availableCount}</span>
+              <span className="num">{availableCount}</span>
               <span className="lbl">Available Rooms</span>
             </Card>
 
-            <Card className="stat-card">
-              <span className="num">{loading ? "—" : activeBookings.length}</span>
+            <Card 
+              className="stat-card"
+              onClick={() => !loading && navigate("/mybookings")}
+              isLoading={loading}
+            >
+
+              <span className="num">{activeBookings.length}</span>
               <span className="lbl">Active Bookings</span>
             </Card>
           </div>
@@ -170,10 +178,11 @@ export function Dashboard() {
           <section className="dashboard-section">
             <h3 className="section-title">Active Reservations</h3>
 
-            {loading ? (
-              <div className="dashboard-state-text">Loading reservations...</div>
-            ) : activeBookings.length === 0 ? (
-              <Card className="empty-state-card">
+            { activeBookings.length === 0 ? (
+              <Card 
+                className={ activeBookings.length === 0 ? "empty-state-card" : "bookings-list"}
+                isLoading={loading}
+              >
                 <p>You have no active reservations right now.</p>
               </Card>
             ) : (

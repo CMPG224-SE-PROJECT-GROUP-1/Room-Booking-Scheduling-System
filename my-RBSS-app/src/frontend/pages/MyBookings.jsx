@@ -22,7 +22,7 @@ export default function MyBookings(){
                 <h3 className="section-title">Active Reservations</h3>
 
                 {loading ? (
-                    <div className="dashboard-state-text">Loading reservations...</div>
+                    <div className="dashboard-state-text"><div class="loader"></div></div>
                 ) : activeBookings.length === 0 ? (
                     <Card className="empty-state-card">
                         <p>You have no active reservations right now.</p>

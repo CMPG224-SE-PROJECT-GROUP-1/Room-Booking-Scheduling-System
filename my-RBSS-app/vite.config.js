@@ -8,5 +8,5 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] })
   ],
-  base: process.env.VITE_BASE_PATH || "Room-Booking-Scheduling-System",
+  base: process.env.VITE_BASE_PATH || "/Room-Booking-Scheduling-System" || "/",
 })

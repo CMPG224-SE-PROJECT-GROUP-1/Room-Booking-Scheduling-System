@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { authService } from "../../backend/User";
+import "./Loader.css";
 
 // Login and sign-up pages: if you are already logged in, go to the dashboard.
 export default function PublicOnlyRoute() {
@@ -14,7 +15,7 @@ export default function PublicOnlyRoute() {
         });
     }, []);
 
-    if (checking) return <p>Loading...</p>;
+    if (checking) return <div class="loader"></div>;
     if (session) return <Navigate to="/dashboard" replace />;
 
     return <Outlet />;
