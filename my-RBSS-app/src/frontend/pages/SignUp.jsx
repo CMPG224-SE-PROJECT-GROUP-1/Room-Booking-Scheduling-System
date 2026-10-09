@@ -55,6 +55,27 @@ export default function SignUp() {
     return (
         <div className="page-wrapper">
             <div className="signup-page">
+                <section className="signup-right">
+
+    <div className="signup-welcome">
+        <span className="signup-tag">Join UniSpace</span>
+        <h2>Your campus rooms,<br />one account away.</h2>
+        <p className="signup-desc">
+            Create an account to reserve study rooms and meeting spaces
+            across the university.
+        </p>
+
+        <ol className="signup-steps">
+            <li>Enter your name and university number (e.g. S123456).</li>
+            <li>Choose a password of at least 8 characters.</li>
+            <li>Enter the 6-digit code we email to your university address.</li>
+        </ol>
+
+        <p className="signup-note">
+            Already registered? Go back to the sign-in page and log in with your university number.
+        </p>
+    </div>
+        </section> 
                 <section className="signup-left">
                     <form className="signup-form" onSubmit={onSignUp}>
                         <h1>Create your account</h1>
@@ -104,27 +125,7 @@ export default function SignUp() {
                     </form>
                 </section>
 
-    <section className="signup-right">
-
-    <div className="signup-welcome">
-        <span className="signup-tag">Join UniSpace</span>
-        <h2>Your campus rooms,<br />one account away.</h2>
-        <p className="signup-desc">
-            Create an account to reserve study rooms and meeting spaces
-            across the university.
-        </p>
-
-        <ol className="signup-steps">
-            <li>Enter your name and university number (e.g. S123456).</li>
-            <li>Choose a password of at least 8 characters.</li>
-            <li>Enter the 6-digit code we email to your university address.</li>
-        </ol>
-
-        <p className="signup-note">
-            Already registered? Go back to the sign-in page and log in with your university number.
-        </p>
-    </div>
-        </section> 
+    
             </div>
         </div>
     );

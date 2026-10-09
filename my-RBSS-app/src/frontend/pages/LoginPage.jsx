@@ -71,6 +71,25 @@ export function LoginPage() {
     return (
         <div className="page-wrapper">
             <main className="login-page">
+                <section className="login-right">
+    <div className="login-welcome">
+        <span className="welcome-tag">Welcome to UniSpace</span>
+        <h3>Find your space.<br />Book it in minutes.</h3>
+        <p className="welcome-desc">
+            UniSpace is the campus room booking system. Reserve study rooms
+            and meeting spaces across the university, any day of the week.
+        </p>
+
+        <ol className="welcome-steps">
+            <li>Sign in with your university number and password.</li>
+            <li>Browse rooms and pick a time slot.</li>
+            <li>Check in with your 4-digit code when you arrive.</li>
+        </ol>
+
+        <p className="welcome-note">New here? Create an account with your university number.</p>
+    </div>
+                </section>
+                
                 <section className="login-left">
                     <form className="login-form" onSubmit={onSignIn}>
                         <h1>Sign In!</h1>
@@ -111,24 +130,7 @@ export function LoginPage() {
                     </form>
                 </section>
 
-                <section className="login-right">
-    <div className="login-welcome">
-        <span className="welcome-tag">Welcome to UniSpace</span>
-        <h3>Find your space.<br />Book it in minutes.</h3>
-        <p className="welcome-desc">
-            UniSpace is the campus room booking system. Reserve study rooms
-            and meeting spaces across the university, any day of the week.
-        </p>
-
-        <ol className="welcome-steps">
-            <li>Sign in with your university number and password.</li>
-            <li>Browse rooms and pick a time slot.</li>
-            <li>Check in with your 4-digit code when you arrive.</li>
-        </ol>
-
-        <p className="welcome-note">New here? Create an account with your university number.</p>
-    </div>
-                </section>
+                
             </main>
         </div>
     );

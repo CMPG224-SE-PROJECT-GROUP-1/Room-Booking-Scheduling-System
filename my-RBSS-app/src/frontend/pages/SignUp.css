@@ -113,5 +113,5 @@
   }
 
   .signup-form { padding: 28px 18px; }
-  .signup-right { display: none; }
+  .signup-right { display: flex; }
 }
