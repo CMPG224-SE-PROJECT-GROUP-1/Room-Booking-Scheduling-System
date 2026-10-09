@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { authService } from "../../backend/User";
+import "./Loader.css";
 
 // Layout route: logged in -> show the child routes, otherwise go to the login page ("/")
 export default function ProtectedRoutes() {
@@ -18,7 +19,7 @@ export default function ProtectedRoutes() {
         return unsubscribe;
     }, []);
 
-    if (checking) return <p>Loading...</p>;
+    if (checking) return <div class="loader"></div>;
     if (!session) return <Navigate to="/" replace />;
 
     return <Outlet />;

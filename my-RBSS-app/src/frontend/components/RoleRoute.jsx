@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { authService } from "../../backend/User";
+import "./Loader.css";
 
 
 export default function RoleRoute({ allow = ["admin"] }) {
@@ -14,7 +15,7 @@ export default function RoleRoute({ allow = ["admin"] }) {
         });
     }, []);
 
-    if (checking) return <p>Loading...</p>;
+    if (checking) return <div class="loader"></div>;
     if (!allow.includes(role)) return <Navigate to="/dashboard" replace />;
 
     return <Outlet />;

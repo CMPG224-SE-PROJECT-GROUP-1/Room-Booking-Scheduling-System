@@ -5,12 +5,15 @@ import { notificationService } from "../../backend/NotificationService";
 
 export default function NotificationList() {
     const [items, setItems] = useState([]);
+    const [notifsLoading, setNotifsLoading] = useState(true)
 
     async function load() {
         try {
             setItems(await notificationService.fetchMine(5));
         } catch (err) {
             console.error("Notifications error:", err);
+        } finally{
+            setNotifsLoading(false);
         }
     }
 
@@ -27,7 +30,11 @@ export default function NotificationList() {
             <h3 className="section-title">Notifications</h3>
             <div className="bookings-list">
                 {items.map((n) => (
-                    <Card key={n.notification_id} className="booking-card">
+                    <Card 
+                        key={n.notification_id} 
+                        className="booking-card"
+                        
+                    >
                         <div className="booking-details">
                             <div className="booking-room" style={{ fontWeight: n.is_read ? "normal" : "bold" }}>
                                 {n.message_content}

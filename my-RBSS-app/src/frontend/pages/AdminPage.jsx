@@ -114,7 +114,7 @@ export default function AdminPage() {
             </div>
           )}
 
-          {loading && <div className="dashboard-state-text">Loading...</div>}
+          {loading && <div className="dashboard-state-text"><div class="loader"></div></div>}
 
           <section className="dashboard-section">
             <h3 className="section-title">Bookings & Check-in</h3>
