@@ -28,3 +28,18 @@ Port number: 587
 Minimum interval between emails: 60
 SMTP Username: resend
 SMTP Password: Resend API Key (re_...)
+
+### Reset Password Template
+<h2>Reset your password</h2>
+
+<p>We received a request to reset your password. Use below OTP to reset.</p>
+<p>{{ .Token }}</p>
+
+<p>If you didn't request this, you can safely ignore this email.</p>
+
+
+### OTP Template
+<h2>Confirm your email address</h2>
+
+<p>Use OTP below to confirm this email address and finish signing up.</p>
+<p>{{ .Token }}</p>
